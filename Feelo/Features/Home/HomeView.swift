@@ -41,7 +41,8 @@ struct HomeView: View {
                 HStack(spacing: 16) {
                     ForEach(section.items) { item in
                         ActivityCard(title: item.title, color: item.color) {
-                            if item.title == "Pecahkan gelembung" {
+                            if let scenario = ScenarioRepository.scenario(for: item.scenarioID) {
+                                router.selectedScenario = scenario
                                 router.currentScreen = .intro
                             }
                         }

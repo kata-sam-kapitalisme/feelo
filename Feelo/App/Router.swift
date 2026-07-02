@@ -11,4 +11,5 @@ enum AppScreen {
 @Observable
 final class Router {
     var currentScreen: AppScreen = .home
+    var selectedScenario: Scenario? = nil
 }

@@ -2,7 +2,12 @@ import SwiftUI
 
 struct IntroView: View {
     @Environment(Router.self) private var router
-    @State private var viewModel = IntroViewModel()
+    @State private var viewModel: IntroViewModel
+
+    init() {
+        // viewModel is initialised in onAppear after router is available
+        _viewModel = State(initialValue: IntroViewModel(scenario: ScenarioRepository.defaultScenario))
+    }
 
     var body: some View {
         ZStack {
@@ -41,6 +46,10 @@ struct IntroView: View {
                     .foregroundStyle(.secondary)
             }
             .padding(32)
+        }
+        .onAppear {
+            let scenario = router.selectedScenario ?? ScenarioRepository.defaultScenario
+            viewModel = IntroViewModel(scenario: scenario)
         }
         .onTapGesture {
             if viewModel.advance() {

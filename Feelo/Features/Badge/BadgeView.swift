@@ -23,7 +23,7 @@ struct BadgeView: View {
                         VStack(spacing: 4) {
                             Text("⭐️")
                                 .font(.system(size: 56))
-                            Text("Pemburu Gelembung")
+                            Text(router.selectedScenario?.badgeTitle ?? "Gelembung Ceria")
                                 .font(.caption)
                                 .fontWeight(.bold)
                                 .foregroundStyle(.white)

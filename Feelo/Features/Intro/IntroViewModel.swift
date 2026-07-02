@@ -8,11 +8,16 @@ enum IntroScene {
 @Observable
 final class IntroViewModel {
     var currentScene: IntroScene = .one
+    private let scenario: Scenario
+
+    init(scenario: Scenario) {
+        self.scenario = scenario
+    }
 
     var subtitle: String {
         switch currentScene {
-        case .one: return "Kita akan belajar memecahkan gelembung! Siap?"
-        case .two: return "Gunakan tanganmu untuk memecahkan semua gelembung yang muncul. Yuk mulai!"
+        case .one: return scenario.introScene1
+        case .two: return scenario.introScene2
         }
     }
 

@@ -2,7 +2,11 @@ import SwiftUI
 
 struct ActionView: View {
     @Environment(Router.self) private var router
-    @State private var viewModel = ActionViewModel()
+    @State private var viewModel: ActionViewModel
+
+    init() {
+        _viewModel = State(initialValue: ActionViewModel(scenario: ScenarioRepository.defaultScenario))
+    }
 
     var body: some View {
         GeometryReader { geo in
@@ -67,6 +71,8 @@ struct ActionView: View {
                     .padding(20)
             }
             .onAppear {
+                let scenario = router.selectedScenario ?? ScenarioRepository.defaultScenario
+                viewModel = ActionViewModel(scenario: scenario)
                 viewModel.spawnBubbles(in: geo.size)
             }
         }

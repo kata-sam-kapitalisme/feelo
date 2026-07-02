@@ -10,6 +10,7 @@ struct HomeItem: Identifiable {
     let id = UUID()
     let title: String
     let color: Color
+    var scenarioID: String = ""
 }
 
 @Observable
@@ -18,7 +19,7 @@ final class HomeViewModel {
         HomeSection(
             title: "Pilihan Hari Ini",
             items: [
-                HomeItem(title: "Pecahkan gelembung", color: .blue.opacity(0.6)),
+                HomeItem(title: "Pecahkan gelembung", color: .blue.opacity(0.6), scenarioID: "pecahkan-gelembung"),
                 HomeItem(title: "Tarik napas", color: .green.opacity(0.6)),
                 HomeItem(title: "Gerak bebas", color: .orange.opacity(0.6)),
             ]
@@ -26,9 +27,9 @@ final class HomeViewModel {
         HomeSection(
             title: "Cerita",
             items: [
-                HomeItem(title: "Si Kancil", color: .purple.opacity(0.5)),
-                HomeItem(title: "Bintang Kecil", color: .pink.opacity(0.5)),
-                HomeItem(title: "Petualangan Awan", color: .cyan.opacity(0.5)),
+                HomeItem(title: "Si Kancil", color: .purple.opacity(0.5), scenarioID: "si-kancil"),
+                HomeItem(title: "Bintang Kecil", color: .pink.opacity(0.5), scenarioID: "bintang-kecil"),
+                HomeItem(title: "Petualangan Awan", color: .cyan.opacity(0.5), scenarioID: "petualangan-awan"),
             ]
         ),
         HomeSection(

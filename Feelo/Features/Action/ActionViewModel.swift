@@ -14,20 +14,21 @@ struct Bubble: Identifiable {
 final class ActionViewModel {
     var bubbles: [Bubble] = []
     var poppedCount: Int = 0
+    private let scenario: Scenario
 
-    private let bubbleColors: [Color] = [
-        .blue, .purple, .pink, .cyan, .green, .orange, .yellow
-    ]
+    init(scenario: Scenario) {
+        self.scenario = scenario
+    }
 
     func spawnBubbles(in size: CGSize) {
         guard bubbles.isEmpty else { return }
-        bubbles = (0..<7).map { index in
+        bubbles = (0..<scenario.bubbleCount).map { _ in
             Bubble(
                 normalizedPosition: CGPoint(
                     x: CGFloat.random(in: 0.1...0.9),
                     y: CGFloat.random(in: 0.15...0.85)
                 ),
-                color: bubbleColors[index % bubbleColors.count],
+                color: scenario.bubbleColor,
                 size: CGFloat.random(in: 60...100)
             )
         }
