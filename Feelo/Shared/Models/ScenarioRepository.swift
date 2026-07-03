@@ -9,7 +9,8 @@ enum ScenarioRepository {
             introScene2: "Gunakan tanganmu untuk memecahkan semua gelembung yang muncul. Yuk mulai!",
             bubbleColor: .blue,
             bubbleCount: 12,
-            badgeTitle: "Gelembung Ceria"
+            badgeTitle: "Gelembung Ceria",
+            gameplayDurationSeconds: 45
         ),
         Scenario(
             id: "si-kancil",
@@ -18,7 +19,8 @@ enum ScenarioRepository {
             introScene2: "Bantu Si Kancil melompati rintangan dengan memecahkan gelembung di depannya. Siap melompat?",
             bubbleColor: .green,
             bubbleCount: 10,
-            badgeTitle: "Kancil Pemberani"
+            badgeTitle: "Kancil Pemberani",
+            gameplayDurationSeconds: 40
         ),
         Scenario(
             id: "bintang-kecil",
@@ -27,7 +29,8 @@ enum ScenarioRepository {
             introScene2: "Pecahkan gelembung awan yang menutupi bintang agar ia bisa bersinar untuk semua orang!",
             bubbleColor: .yellow,
             bubbleCount: 8,
-            badgeTitle: "Bintang Bersinar"
+            badgeTitle: "Bintang Bersinar",
+            gameplayDurationSeconds: 35
         ),
         Scenario(
             id: "petualangan-awan",
@@ -36,7 +39,8 @@ enum ScenarioRepository {
             introScene2: "Sentuh setiap awan yang melayang dan rasakan betapa ringannya perasaanmu. Ayo terbang!",
             bubbleColor: .cyan,
             bubbleCount: 15,
-            badgeTitle: "Penjelajah Awan"
+            badgeTitle: "Penjelajah Awan",
+            gameplayDurationSeconds: 50
         ),
     ]
 

@@ -8,4 +8,5 @@ struct Scenario: Identifiable {
     let bubbleColor: Color
     let bubbleCount: Int
     let badgeTitle: String
+    let gameplayDurationSeconds: Double
 }
