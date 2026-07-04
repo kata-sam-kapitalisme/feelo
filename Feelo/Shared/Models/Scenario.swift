@@ -1,5 +1,10 @@
 import SwiftUI
 
+enum GameType {
+    case bubblePop
+    case pumpBall
+}
+
 struct Scenario: Identifiable {
     let id: String
     let title: String
@@ -11,4 +16,6 @@ struct Scenario: Identifiable {
     let bubbleCount: Int
     let badgeTitle: String
     let gameplayDurationSeconds: Double
+    var gameType: GameType = .bubblePop
+    var isLocked: Bool = false
 }

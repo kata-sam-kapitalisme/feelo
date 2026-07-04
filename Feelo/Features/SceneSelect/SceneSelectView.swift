@@ -17,10 +17,8 @@ struct SceneSelectView: View {
         router.sceneFilter?.title ?? "Semua Cerita"
     }
 
-    // Only the first scenario in the list is unlocked
     private func isLocked(_ scenario: Scenario) -> Bool {
-        guard let first = scenarios.first else { return true }
-        return scenario.id != first.id
+        scenario.isLocked
     }
 
     var body: some View {

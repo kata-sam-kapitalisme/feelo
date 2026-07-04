@@ -24,7 +24,8 @@ enum ScenarioRepository {
             bubbleColor: .green,
             bubbleCount: 10,
             badgeTitle: "Kancil Pemberani",
-            gameplayDurationSeconds: 40
+            gameplayDurationSeconds: 40,
+            isLocked: true
         ),
         Scenario(
             id: "bintang-kecil",
@@ -36,7 +37,21 @@ enum ScenarioRepository {
             bubbleColor: .yellow,
             bubbleCount: 8,
             badgeTitle: "Bintang Bersinar",
-            gameplayDurationSeconds: 35
+            gameplayDurationSeconds: 35,
+            isLocked: true
+        ),
+        Scenario(
+            id: "pompa-bola",
+            title: "Pompa Bola",
+            placeTag: "Taman Bermain",
+            emotionTag: "Bersemangat",
+            introScene1: "Ada bola yang kempes di taman! Ayo kita pompa bersama!",
+            introScene2: "Gerakkan tanganmu naik dan turun untuk memompa bola. Pompa sampai penuh, yuk!",
+            bubbleColor: .orange,
+            bubbleCount: 0,
+            badgeTitle: "Pemompa Hebat",
+            gameplayDurationSeconds: 60,
+            gameType: .pumpBall
         ),
         Scenario(
             id: "petualangan-awan",
@@ -48,7 +63,8 @@ enum ScenarioRepository {
             bubbleColor: .cyan,
             bubbleCount: 15,
             badgeTitle: "Penjelajah Awan",
-            gameplayDurationSeconds: 50
+            gameplayDurationSeconds: 50,
+            isLocked: true
         ),
     ]
 
