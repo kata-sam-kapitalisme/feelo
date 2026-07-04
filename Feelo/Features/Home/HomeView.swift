@@ -3,54 +3,115 @@ import SwiftUI
 struct HomeView: View {
     @Environment(Router.self) private var router
     @State private var viewModel = HomeViewModel()
+    @State private var bookPressed = false
 
     var body: some View {
-        ScrollView(.vertical) {
-            VStack(alignment: .leading, spacing: 28) {
-                header
+        ZStack {
+            // Layer 1: dark green background
+            Color(red: 0.08, green: 0.28, blue: 0.14)
+                .ignoresSafeArea()
 
-                ForEach(viewModel.sections, id: \.title) { section in
-                    sectionView(section)
+            // Layer 2: wave pattern placeholder
+            // TODO: Replace with Image("bg_waves").resizable().ignoresSafeArea()
+            Rectangle()
+                .fill(Color.white.opacity(0.04))
+                .ignoresSafeArea()
+
+            // Layer 3: content
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 32) {
+                    header
+                    placesSection
+                    emotionsSection
                 }
+                .padding(.horizontal, 40)
+                .padding(.vertical, 24)
             }
-            .padding(.vertical, 24)
         }
-        .background(Color(.systemGroupedBackground))
     }
+
+    // MARK: - Header
 
     private var header: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text("Halo, Feelo! 👋")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-            Text("Mau belajar apa hari ini?")
-                .font(.title3)
-                .foregroundStyle(.secondary)
+        HStack {
+            Text("Feelo")
+                .font(.system(size: 38, weight: .bold, design: .rounded))
+                .foregroundStyle(.white)
+
+            Spacer()
+
+            Button {
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) {
+                    bookPressed = true
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    bookPressed = false
+                }
+            } label: {
+                ZStack {
+                    Circle()
+                        .fill(.white)
+                        .frame(width: 50, height: 50)
+                        .shadow(color: .black.opacity(0.2), radius: 6, y: 3)
+                    Image(systemName: "book.fill")
+                        .font(.system(size: 22))
+                        .foregroundStyle(Color(red: 0.08, green: 0.28, blue: 0.14))
+                }
+            }
+            .scaleEffect(bookPressed ? 0.88 : 1.0)
         }
-        .padding(.horizontal, 24)
     }
 
-    private func sectionView(_ section: HomeSection) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(section.title)
-                .font(.title2)
-                .fontWeight(.semibold)
-                .padding(.horizontal, 24)
+    // MARK: - Places Section
+
+    private var placesSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Cerita untukmu")
+                .font(.system(.title2, design: .rounded, weight: .bold))
+                .foregroundStyle(.white)
 
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 16) {
-                    ForEach(section.items) { item in
-                        ActivityCard(title: item.title, color: item.color) {
-                            if let scenario = ScenarioRepository.scenario(for: item.scenarioID) {
-                                router.selectedScenario = scenario
-                                router.currentScreen = .intro
-                            }
+                HStack(spacing: 20) {
+                    ForEach(viewModel.places) { place in
+                        PlaceCard(place: place) {
+                            navigateToPlace(place)
                         }
-                        .containerRelativeFrame(.horizontal, count: 3, spacing: 16)
+                        .padding(.bottom, 24) // space for pill overflow
                     }
                 }
-                .padding(.horizontal, 24)
+                .padding(.horizontal, 40)
             }
+            .padding(.horizontal, -40)
         }
+    }
+
+    // MARK: - Emotions Section
+
+    private var emotionsSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Macam-macam emosi")
+                .font(.system(.title2, design: .rounded, weight: .bold))
+                .foregroundStyle(.white)
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 24) {
+                    ForEach(viewModel.emotions) { emotion in
+                        EmotionCard(emotion: emotion) {
+                            router.sceneFilter = .emotion(emotion.title)
+                            router.currentScreen = .sceneSelect
+                        }
+                    }
+                }
+                .padding(.horizontal, 40)
+            }
+            .padding(.horizontal, -40)
+        }
+    }
+
+    // MARK: - Navigation
+
+    private func navigateToPlace(_ place: PlaceModel) {
+        router.sceneFilter = .place(place.title)
+        router.currentScreen = .sceneSelect
     }
 }

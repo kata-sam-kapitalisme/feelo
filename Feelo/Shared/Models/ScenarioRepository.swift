@@ -5,6 +5,8 @@ enum ScenarioRepository {
         Scenario(
             id: "pecahkan-gelembung",
             title: "Pecahkan Gelembung",
+            placeTag: "Taman Bermain",
+            emotionTag: "Bersemangat",
             introScene1: "Kita akan belajar memecahkan gelembung! Siap?",
             introScene2: "Gunakan tanganmu untuk memecahkan semua gelembung yang muncul. Yuk mulai!",
             bubbleColor: .blue,
@@ -15,6 +17,8 @@ enum ScenarioRepository {
         Scenario(
             id: "si-kancil",
             title: "Si Kancil",
+            placeTag: "Taman Bermain",
+            emotionTag: "Senang",
             introScene1: "Si Kancil adalah hewan yang cerdik dan berani. Hari ini kita ikut petualangannya!",
             introScene2: "Bantu Si Kancil melompati rintangan dengan memecahkan gelembung di depannya. Siap melompat?",
             bubbleColor: .green,
@@ -25,6 +29,8 @@ enum ScenarioRepository {
         Scenario(
             id: "bintang-kecil",
             title: "Bintang Kecil",
+            placeTag: "Sekolah",
+            emotionTag: "Senang",
             introScene1: "Jauh di langit malam, ada bintang kecil yang ingin bersinar lebih terang.",
             introScene2: "Pecahkan gelembung awan yang menutupi bintang agar ia bisa bersinar untuk semua orang!",
             bubbleColor: .yellow,
@@ -35,6 +41,8 @@ enum ScenarioRepository {
         Scenario(
             id: "petualangan-awan",
             title: "Petualangan Awan",
+            placeTag: "Rumah",
+            emotionTag: "Bersemangat",
             introScene1: "Awan-awan ajaib mengundangmu untuk terbang bersama mereka hari ini!",
             introScene2: "Sentuh setiap awan yang melayang dan rasakan betapa ringannya perasaanmu. Ayo terbang!",
             bubbleColor: .cyan,
@@ -46,6 +54,14 @@ enum ScenarioRepository {
 
     static func scenario(for id: String) -> Scenario? {
         all.first { $0.id == id }
+    }
+
+    static func scenarios(forPlace place: String) -> [Scenario] {
+        all.filter { $0.placeTag == place }
+    }
+
+    static func scenarios(forEmotion emotion: String) -> [Scenario] {
+        all.filter { $0.emotionTag == emotion }
     }
 
     static var defaultScenario: Scenario { all[0] }
