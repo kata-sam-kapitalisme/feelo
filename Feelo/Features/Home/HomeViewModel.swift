@@ -27,10 +27,11 @@ final class HomeViewModel {
     ]
 
     let emotions: [EmotionModel] = [
-        EmotionModel(title: "Bersemangat", imageName: "emo_bersemangat", borderColor: .yellow,  isLocked: false),
-        EmotionModel(title: "Senang",      imageName: "emo_senang",      borderColor: .orange,  isLocked: false),
-        EmotionModel(title: "Sedih",       imageName: "emo_sedih",       borderColor: .blue,    isLocked: true),
-        EmotionModel(title: "Marah",       imageName: "emo_marah",       borderColor: .red,     isLocked: true),
-        EmotionModel(title: "Kecewa",      imageName: "emo_kecewa",      borderColor: .purple,  isLocked: true),
+        EmotionModel(title: "Bersemangat", imageName: "emo_bersemangat", borderColor: .yellow,                                  isLocked: false),
+        EmotionModel(title: "Kecewa",      imageName: "emo_kecewa",      borderColor: Color(red: 0.55, green: 0.2, blue: 0.75), isLocked: false),
+        EmotionModel(title: "Takut",       imageName: "emo_sedih",       borderColor: .indigo,                                  isLocked: true),
+        EmotionModel(title: "Bangga",      imageName: "emo_senang",      borderColor: .orange,                                  isLocked: true),
+        EmotionModel(title: "Bingung",     imageName: "emo_marah",       borderColor: .teal,                                    isLocked: true),
+        EmotionModel(title: "Penasaran",   imageName: "emo_bersemangat", borderColor: .pink,                                    isLocked: true),
     ]
 }

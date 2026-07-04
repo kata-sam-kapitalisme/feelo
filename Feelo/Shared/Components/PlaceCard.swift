@@ -5,59 +5,90 @@ struct PlaceCard: View {
     let onTap: () -> Void
 
     var body: some View {
-        ZStack(alignment: .bottom) {
-            // White frame
-            RoundedRectangle(cornerRadius: 30)
-                .fill(.white)
-                .shadow(color: .black.opacity(0.25), radius: 8, y: 4)
+        GeometryReader { geo in
+            ZStack {
+                // ── White cloud frame ──────────────────────────────
+                RoundedRectangle(cornerRadius: 28)
+                    .fill(.white)
+                    .shadow(color: .black.opacity(0.22), radius: 10, x: 0, y: 6)
 
-            // Image placeholder
-            // TODO: Replace with Image(place.imageName).resizable().scaledToFill()
-            Color.teal.opacity(0.5)
-                .clipShape(RoundedRectangle(cornerRadius: 24))
-                .padding(6)
+                // ── Scene image — centered with equal inset on all sides
+                Group {
+                    if UIImage(named: place.imageName) != nil {
+                        Image(place.imageName)
+                            .resizable()
+                            .scaledToFit()
+                    } else {
+                        LinearGradient(
+                            colors: [Color.teal.opacity(0.7), Color.green.opacity(0.45)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    }
+                }
+                .frame(width: geo.size.width - 14, height: geo.size.height - 14)
+                .clipShape(RoundedRectangle(cornerRadius: 22))
 
-            // Locked dim overlay
-            if place.isLocked {
-                Color.black.opacity(0.6)
-                    .clipShape(RoundedRectangle(cornerRadius: 24))
-                    .padding(6)
+                // ── Locked dim overlay ─────────────────────────────
+                if place.isLocked {
+                    RoundedRectangle(cornerRadius: 22)
+                        .fill(Color.black.opacity(0.55))
+                        .frame(width: geo.size.width - 14, height: geo.size.height - 14)
 
-                lockIcon
+                    lockIcon(geo: geo)
+                }
             }
-
-            // Pill label
-            pillLabel
-                .offset(y: 18)
+            // ── Pill label overflowing the bottom edge ─────────────
+            .overlay(alignment: .bottom) {
+                pillLabel
+                    .offset(y: 36)   // half of label height (72/2) so it straddles the edge
+            }
         }
-        .frame(width: 220, height: 160)
         .contentShape(Rectangle())
         .onTapGesture {
             if !place.isLocked { onTap() }
         }
     }
 
-    private var lockIcon: some View {
-        ZStack {
+    private func lockIcon(geo: GeometryProxy) -> some View {
+        let size: CGFloat = min(geo.size.width, geo.size.height) * 0.28
+        return ZStack {
             Circle()
                 .fill(.white)
-                .frame(width: 44, height: 44)
+                .frame(width: size, height: size)
+                .shadow(color: .black.opacity(0.15), radius: 4, y: 2)
             Image(systemName: "lock.fill")
-                .font(.system(size: 20, weight: .semibold))
-                .foregroundStyle(.orange)
+                .font(.system(size: size * 0.42, weight: .bold))
+                .foregroundStyle(Color.orange)
         }
     }
 
     private var pillLabel: some View {
-        Text(place.title)
-            .font(.system(.subheadline, design: .rounded, weight: .semibold))
-            .foregroundStyle(place.isLocked ? Color.gray : Color.black)
-            .padding(.horizontal, 16)
-            .padding(.vertical, 6)
-            .background(
-                Capsule()
-                    .fill(place.isLocked ? Color.white.opacity(0.7) : Color.white)
-                    .shadow(color: .black.opacity(0.15), radius: 4, y: 2)
-            )
+        ZStack {
+            // Union SVG as label background shape
+            Image("Union")
+                .resizable()
+                .renderingMode(.template)
+                .foregroundStyle(
+                    place.isLocked
+                        ? Color.gray.opacity(0.55)
+                        : Color.white
+                )
+                .scaledToFit()
+                .shadow(color: .black.opacity(0.18), radius: 4, y: 2)
+
+            // Title text centred on top of the Union shape
+            Text(place.title)
+                .font(.system(size: 18, weight: .bold, design: .rounded))
+                .foregroundStyle(
+                    place.isLocked
+                        ? Color.white.opacity(0.85)
+                        : Color(red: 0.10, green: 0.22, blue: 0.12)
+                )
+                .lineLimit(1)
+                // Nudge text up slightly to sit in the flat top portion of the Union wave shape
+                .offset(y: -6)
+        }
+        .frame(width: 220, height: 72)
     }
 }

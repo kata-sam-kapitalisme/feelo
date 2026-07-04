@@ -1,117 +1,143 @@
 import SwiftUI
 
+// MARK: - HomeView
+
 struct HomeView: View {
     @Environment(Router.self) private var router
     @State private var viewModel = HomeViewModel()
     @State private var bookPressed = false
 
     var body: some View {
-        ZStack {
-            // Layer 1: dark green background
-            Color(red: 0.08, green: 0.28, blue: 0.14)
-                .ignoresSafeArea()
+        GeometryReader { geo in
+            ZStack {
+                // ── Background ──────────────────────────────────────
+                Color(red: 0.13, green: 0.32, blue: 0.16)
+                    .ignoresSafeArea()
 
-            // Layer 2: wave pattern placeholder
-            // TODO: Replace with Image("bg_waves").resizable().ignoresSafeArea()
-            Rectangle()
-                .fill(Color.white.opacity(0.04))
-                .ignoresSafeArea()
-
-            // Layer 3: content
-            ScrollView(.vertical, showsIndicators: false) {
-                VStack(alignment: .leading, spacing: 32) {
-                    header
-                    placesSection
-                    emotionsSection
+                if UIImage(named: "bg_waves") != nil {
+                    Image("bg_waves")
+                        .resizable()
+                        .ignoresSafeArea()
+                        .opacity(0.18)
                 }
-                .padding(.horizontal, 40)
-                .padding(.vertical, 24)
+
+                // ── Content ─────────────────────────────────────────
+                VStack(alignment: .leading, spacing: 0) {
+
+                    // Header
+                    homeHeader
+                        .padding(.horizontal, hPad(geo))
+                        .padding(.top, geo.safeAreaInsets.top + 10)
+                        .padding(.bottom, geo.size.height * 0.025)
+
+                    // Section: Cerita untukmu
+                    sectionTitle("Cerita untukmu")
+                        .padding(.horizontal, hPad(geo))
+                        .padding(.bottom, 12)
+
+                    placesCarousel(geo: geo)
+
+                    Spacer(minLength: 0)
+
+                    // Section: Macam-macam emosi
+                    sectionTitle("Macam-macam emosi")
+                        .padding(.horizontal, hPad(geo))
+                        .padding(.bottom, 12)
+
+                    emotionsCarousel(geo: geo)
+
+                    Spacer(minLength: geo.safeAreaInsets.bottom + 16)
+                }
             }
         }
+        .ignoresSafeArea(edges: .bottom)
+    }
+
+    // MARK: - Responsive helpers
+
+    private func hPad(_ geo: GeometryProxy) -> CGFloat {
+        max(20, geo.size.width * 0.03)
     }
 
     // MARK: - Header
 
-    private var header: some View {
-        HStack {
+    private var homeHeader: some View {
+        HStack(alignment: .center) {
             Text("Feelo")
-                .font(.system(size: 38, weight: .bold, design: .rounded))
+                .font(.system(size: 36, weight: .heavy, design: .rounded))
                 .foregroundStyle(.white)
 
             Spacer()
 
             Button {
-                withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) {
-                    bookPressed = true
-                }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                    bookPressed = false
-                }
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) { bookPressed = true }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { bookPressed = false }
             } label: {
                 ZStack {
                     Circle()
-                        .fill(.white)
-                        .frame(width: 50, height: 50)
-                        .shadow(color: .black.opacity(0.2), radius: 6, y: 3)
+                        .fill(Color(red: 0.22, green: 0.18, blue: 0.45))
+                        .frame(width: 52, height: 52)
+                        .shadow(color: .black.opacity(0.25), radius: 6, y: 3)
                     Image(systemName: "book.fill")
-                        .font(.system(size: 22))
-                        .foregroundStyle(Color(red: 0.08, green: 0.28, blue: 0.14))
+                        .font(.system(size: 22, weight: .semibold))
+                        .foregroundStyle(.yellow)
                 }
             }
+            .buttonStyle(.plain)
             .scaleEffect(bookPressed ? 0.88 : 1.0)
         }
     }
 
-    // MARK: - Places Section
+    // MARK: - Section Title
 
-    private var placesSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text("Cerita untukmu")
-                .font(.system(.title2, design: .rounded, weight: .bold))
-                .foregroundStyle(.white)
+    private func sectionTitle(_ text: String) -> some View {
+        Text(text)
+            .font(.system(size: 24, weight: .bold, design: .rounded))
+            .foregroundStyle(.white)
+    }
 
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 20) {
-                    ForEach(viewModel.places) { place in
-                        PlaceCard(place: place) {
-                            navigateToPlace(place)
-                        }
-                        .padding(.bottom, 24) // space for pill overflow
+    // MARK: - Places Carousel
+
+    @ViewBuilder
+    private func placesCarousel(geo: GeometryProxy) -> some View {
+        // Card width = ~35% of screen width; height = 3/4 of that (landscape 4:3)
+        let cardW = geo.size.width * 0.35
+        let cardH = cardW * 0.75
+
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 16) {
+                ForEach(viewModel.places) { place in
+                    PlaceCard(place: place) {
+                        router.sceneFilter = .place(place.title)
+                        router.currentScreen = .sceneSelect
                     }
+                    .frame(width: cardW, height: cardH)
+                    .padding(.bottom, 22)   // room for pill overflow
                 }
-                .padding(.horizontal, 40)
             }
-            .padding(.horizontal, -40)
+            .padding(.horizontal, hPad(geo))
         }
     }
 
-    // MARK: - Emotions Section
 
-    private var emotionsSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text("Macam-macam emosi")
-                .font(.system(.title2, design: .rounded, weight: .bold))
-                .foregroundStyle(.white)
+    // MARK: - Emotions Carousel
 
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 24) {
-                    ForEach(viewModel.emotions) { emotion in
-                        EmotionCard(emotion: emotion) {
-                            router.sceneFilter = .emotion(emotion.title)
-                            router.currentScreen = .sceneSelect
-                        }
+    @ViewBuilder
+    private func emotionsCarousel(geo: GeometryProxy) -> some View {
+        let circleSize = geo.size.height * 0.26
+
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 20) {
+                ForEach(viewModel.emotions) { emotion in
+                    EmotionCard(emotion: emotion) {
+                        router.sceneFilter = .emotion(emotion.title)
+                        router.currentScreen = .sceneSelect
                     }
+                    .frame(width: circleSize, height: circleSize)
+                    .padding(.bottom, circleSize * 0.22)   // room for pill overflow
                 }
-                .padding(.horizontal, 40)
             }
-            .padding(.horizontal, -40)
+            .padding(.horizontal, hPad(geo))
         }
-    }
-
-    // MARK: - Navigation
-
-    private func navigateToPlace(_ place: PlaceModel) {
-        router.sceneFilter = .place(place.title)
-        router.currentScreen = .sceneSelect
     }
 }

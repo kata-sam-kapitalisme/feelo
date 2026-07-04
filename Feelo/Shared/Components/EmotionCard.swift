@@ -5,34 +5,52 @@ struct EmotionCard: View {
     let onTap: () -> Void
 
     var body: some View {
-        VStack(spacing: 0) {
-            ZStack {
-                // Colored border circle
-                Circle()
-                    .strokeBorder(emotion.isLocked ? .gray : emotion.borderColor, lineWidth: 6)
-                    .frame(width: 130, height: 130)
+        GeometryReader { geo in
+            let size = min(geo.size.width, geo.size.height)
+            let innerSize = size - size * 0.12
+            let borderWidth = size * 0.055
 
-                // Image placeholder
-                // TODO: Replace with Image(emotion.imageName).resizable().scaledToFill()
+            ZStack {
+                // Colored border ring + white fill
                 Circle()
-                    .fill(emotion.borderColor.opacity(emotion.isLocked ? 0.2 : 0.4))
-                    .frame(width: 118, height: 118)
+                    .strokeBorder(
+                        emotion.isLocked ? Color.gray.opacity(0.45) : emotion.borderColor,
+                        lineWidth: borderWidth
+                    )
+                    .background(Circle().fill(Color.white))
+                    .frame(width: size, height: size)
+
+                // Face image
+                Group {
+                    if UIImage(named: emotion.imageName) != nil {
+                        Image(emotion.imageName)
+                            .resizable()
+                            .scaledToFill()
+                    } else {
+                        Circle().fill(emotion.borderColor.opacity(0.30))
+                    }
+                }
+                .frame(width: innerSize, height: innerSize)
+                .clipShape(Circle())
 
                 // Locked dim overlay
                 if emotion.isLocked {
                     Circle()
-                        .fill(Color.black.opacity(0.6))
-                        .frame(width: 118, height: 118)
+                        .fill(Color.black.opacity(0.55))
+                        .frame(width: innerSize, height: innerSize)
 
-                    lockIcon
+                    lockIcon(size: size * 0.38)
                 }
-            }
-            .overlay(alignment: .bottom) {
-                pillLabel
-                    .offset(y: 15)
-            }
 
-            Spacer().frame(height: 22) // room for pill offset
+                // Pill overlapping bottom edge
+                VStack {
+                    Spacer()
+                    pillLabel
+                        .offset(y: size * 0.17)
+                }
+                .frame(width: size, height: size)
+            }
+            .frame(width: size, height: size)
         }
         .contentShape(Rectangle())
         .onTapGesture {
@@ -40,27 +58,33 @@ struct EmotionCard: View {
         }
     }
 
-    private var lockIcon: some View {
+    private func lockIcon(size: CGFloat) -> some View {
         ZStack {
             Circle()
                 .fill(.white)
-                .frame(width: 36, height: 36)
+                .frame(width: size, height: size)
+                .shadow(color: .black.opacity(0.15), radius: 4, y: 2)
             Image(systemName: "lock.fill")
-                .font(.system(size: 16, weight: .semibold))
-                .foregroundStyle(.orange)
+                .font(.system(size: size * 0.42, weight: .bold))
+                .foregroundStyle(Color.orange)
         }
     }
 
     private var pillLabel: some View {
         Text(emotion.title)
-            .font(.system(.caption, design: .rounded, weight: .semibold))
-            .foregroundStyle(emotion.isLocked ? Color.gray : Color.black)
-            .padding(.horizontal, 12)
-            .padding(.vertical, 5)
+            .font(.system(size: 13, weight: .bold, design: .rounded))
+            .foregroundStyle(
+                emotion.isLocked
+                    ? Color.white.opacity(0.80)
+                    : Color(red: 0.10, green: 0.22, blue: 0.12)
+            )
+            .lineLimit(1)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 7)
             .background(
                 Capsule()
-                    .fill(Color.white)
-                    .shadow(color: .black.opacity(0.2), radius: 4, y: 2)
+                    .fill(emotion.isLocked ? Color.gray.opacity(0.50) : Color.white)
+                    .shadow(color: .black.opacity(0.18), radius: 4, y: 2)
             )
     }
 }
