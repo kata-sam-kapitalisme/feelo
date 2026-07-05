@@ -24,7 +24,9 @@ struct SceneSelectView: View {
     var body: some View {
         ZStack(alignment: .topLeading) {
             // Background
-            Color(red: 0.11, green: 0.30, blue: 0.14)
+            Image("bg_waves")
+                .resizable()
+                .scaledToFill()
                 .ignoresSafeArea()
 
             VStack(alignment: .leading, spacing: 0) {
@@ -90,9 +92,10 @@ struct SceneSelectView: View {
             Spacer()
 
             // Feelo logo
-            Text("Feelo")
-                .font(.system(size: 30, weight: .heavy, design: .rounded))
-                .foregroundStyle(.white)
+            Image("logo")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 250, height: 109.81068420410156)
         }
     }
 

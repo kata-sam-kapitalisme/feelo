@@ -5,21 +5,16 @@ import SwiftUI
 struct HomeView: View {
     @Environment(Router.self) private var router
     @State private var viewModel = HomeViewModel()
-    @State private var bookPressed = false
+    @State private var badgePressed = false
 
     var body: some View {
         GeometryReader { geo in
             ZStack {
                 // ── Background ──────────────────────────────────────
-                Color(red: 0.13, green: 0.32, blue: 0.16)
+                Image("bg_waves")
+                    .resizable()
+                    .scaledToFill()
                     .ignoresSafeArea()
-
-                if UIImage(named: "bg_waves") != nil {
-                    Image("bg_waves")
-                        .resizable()
-                        .ignoresSafeArea()
-                        .opacity(0.18)
-                }
 
                 // ── Content ─────────────────────────────────────────
                 VStack(alignment: .leading, spacing: 0) {
@@ -63,37 +58,47 @@ struct HomeView: View {
 
     private var homeHeader: some View {
         HStack(alignment: .center) {
-            Text("Feelo")
-                .font(.system(size: 36, weight: .heavy, design: .rounded))
-                .foregroundStyle(.white)
+            Image("logo")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 250, height: 109.81068420410156)
 
             Spacer()
 
             Button {
-                withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) { bookPressed = true }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { bookPressed = false }
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) { badgePressed = true }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    badgePressed = false
+                    router.currentScreen = .badge
+                }
             } label: {
                 ZStack {
                     Circle()
-                        .fill(Color(red: 0.22, green: 0.18, blue: 0.45))
-                        .frame(width: 52, height: 52)
+                        .fill(Color.white)
+                        .frame(width: 80, height: 80)
                         .shadow(color: .black.opacity(0.25), radius: 6, y: 3)
-                    Image(systemName: "book.fill")
-                        .font(.system(size: 22, weight: .semibold))
-                        .foregroundStyle(.yellow)
+                    Image("badge")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 48, height: 48)
                 }
             }
             .buttonStyle(.plain)
-            .scaleEffect(bookPressed ? 0.88 : 1.0)
+            .scaleEffect(badgePressed ? 0.88 : 1.0)
         }
     }
 
     // MARK: - Section Title
 
     private func sectionTitle(_ text: String) -> some View {
-        Text(text)
-            .font(.system(size: 24, weight: .bold, design: .rounded))
+        let fredokaLoaded = UIFont(name: "FredokaLight-Bold", size: 40) != nil
+        return Text(text)
+            .font(fredokaLoaded
+                  ? .custom("FredokaLight-Bold", size: 40)
+                  : .system(size: 40, weight: .bold, design: .rounded))
             .foregroundStyle(.white)
+            .lineSpacing(0)
+            .tracking(0)
     }
 
     // MARK: - Places Carousel
@@ -102,7 +107,7 @@ struct HomeView: View {
     private func placesCarousel(geo: GeometryProxy) -> some View {
         // Card width = ~35% of screen width; height = 3/4 of that (landscape 4:3)
         let cardW = geo.size.width * 0.33
-        let cardH = cardW * 0.75
+        let cardH = cardW * 0.832   // Figma canvas: (61.27 + 304) / 439 = 0.832
 
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 16) {
@@ -124,7 +129,7 @@ struct HomeView: View {
 
     @ViewBuilder
     private func emotionsCarousel(geo: GeometryProxy) -> some View {
-        let circleSize = geo.size.height * 0.26
+        let circleSize: CGFloat = 200
 
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 20) {

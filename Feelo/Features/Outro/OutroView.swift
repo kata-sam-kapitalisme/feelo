@@ -5,7 +5,9 @@ struct OutroView: View {
 
     var body: some View {
         ZStack {
-            Color.purple.opacity(0.85)
+            Image("bg_waves")
+                .resizable()
+                .scaledToFill()
                 .ignoresSafeArea()
 
             VStack(spacing: 32) {
