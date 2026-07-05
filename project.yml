@@ -33,6 +33,7 @@ targets:
     dependencies:
       - sdk: AVFoundation.framework
       - sdk: Vision.framework
+      - sdk: WebKit.framework
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.riyanfirdausamerta.feelo
