@@ -101,7 +101,7 @@ struct HomeView: View {
     @ViewBuilder
     private func placesCarousel(geo: GeometryProxy) -> some View {
         // Card width = ~35% of screen width; height = 3/4 of that (landscape 4:3)
-        let cardW = geo.size.width * 0.35
+        let cardW = geo.size.width * 0.33
         let cardH = cardW * 0.75
 
         ScrollView(.horizontal, showsIndicators: false) {
@@ -112,7 +112,7 @@ struct HomeView: View {
                         router.currentScreen = .sceneSelect
                     }
                     .frame(width: cardW, height: cardH)
-                    .padding(.bottom, 22)   // room for pill overflow
+                    .padding(.bottom, cardH * 0.25)   // room for proportional label overflow
                 }
             }
             .padding(.horizontal, hPad(geo))

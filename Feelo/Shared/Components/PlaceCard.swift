@@ -63,8 +63,8 @@ struct PlaceCard: View {
                             )
                         }
                     }
-                    .frame(width: frontW - 8, height: frontH - 8)
-                    .clipShape(RoundedRectangle(cornerRadius: 22))
+                    .frame(width: frontW - 22, height: frontH - 22)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
 
                     // Bottom contrast gradient
                     LinearGradient(
@@ -76,8 +76,8 @@ struct PlaceCard: View {
                         startPoint: .top,
                         endPoint: .bottom
                     )
-                    .frame(width: frontW - 8, height: frontH - 8)
-                    .clipShape(RoundedRectangle(cornerRadius: 22))
+                    .frame(width: frontW - 22, height: frontH - 22)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
 
                     // Locked dim overlay
                     if place.isLocked {
@@ -91,8 +91,8 @@ struct PlaceCard: View {
                 .frame(width: frontW, height: frontH)
                 // Pill label overflows the front card's bottom edge
                 .overlay(alignment: .bottom) {
-                    pillLabel
-                        .offset(y: 36)
+                    pillLabel(cardWidth: frontW)
+                        .offset(y: frontW * 0.14)  // proportional vertical offset
                 }
             }
             // Fill the full GeometryReader frame, anchored to bottom
@@ -120,8 +120,14 @@ struct PlaceCard: View {
 
     // MARK: - Pill label (Union SVG)
 
-    private var pillLabel: some View {
-        ZStack {
+    private func pillLabel(cardWidth: CGFloat) -> some View {
+        let labelW   = cardWidth * 0.72
+        let labelH   = cardWidth * 0.22
+        let fontSize = cardWidth * 0.055   // smaller text
+
+        return ZStack {
+            // Explicit frame forces the SVG to fill exactly labelW × labelH
+            // (scaledToFit was ignoring the width dimension)
             Image("Union")
                 .resizable()
                 .renderingMode(.template)
@@ -130,19 +136,19 @@ struct PlaceCard: View {
                         ? Color.gray.opacity(0.55)
                         : Color.white
                 )
-                .scaledToFit()
+                .frame(width: labelW, height: labelH)
                 .shadow(color: .black.opacity(0.22), radius: 6, y: 3)
 
             Text(place.title)
-                .font(.system(size: 18, weight: .bold, design: .rounded))
+                .font(.system(size: fontSize, weight: .bold, design: .rounded))
                 .foregroundStyle(
                     place.isLocked
                         ? Color.white.opacity(0.85)
                         : Color(red: 0.10, green: 0.22, blue: 0.12)
                 )
                 .lineLimit(1)
-                .offset(y: -6)
+                .offset(y: -labelH * 0.12)
         }
-        .frame(width: 220, height: 72)
+        .frame(width: labelW, height: labelH)
     }
 }
