@@ -15,32 +15,6 @@ enum ScenarioRepository {
             gameplayDurationSeconds: 45
         ),
         Scenario(
-            id: "si-kancil",
-            title: "Si Kancil",
-            placeTag: "Taman Bermain",
-            emotionTag: "Senang",
-            introScene1: "Si Kancil adalah hewan yang cerdik dan berani. Hari ini kita ikut petualangannya!",
-            introScene2: "Bantu Si Kancil melompati rintangan dengan memecahkan gelembung di depannya. Siap melompat?",
-            bubbleColor: .green,
-            bubbleCount: 10,
-            badgeTitle: "Kancil Pemberani",
-            gameplayDurationSeconds: 40,
-            isLocked: true
-        ),
-        Scenario(
-            id: "bintang-kecil",
-            title: "Bintang Kecil",
-            placeTag: "Sekolah",
-            emotionTag: "Senang",
-            introScene1: "Jauh di langit malam, ada bintang kecil yang ingin bersinar lebih terang.",
-            introScene2: "Pecahkan gelembung awan yang menutupi bintang agar ia bisa bersinar untuk semua orang!",
-            bubbleColor: .yellow,
-            bubbleCount: 8,
-            badgeTitle: "Bintang Bersinar",
-            gameplayDurationSeconds: 35,
-            isLocked: true
-        ),
-        Scenario(
             id: "pompa-bola",
             title: "Pompa Bola",
             placeTag: "Taman Bermain",
@@ -52,19 +26,6 @@ enum ScenarioRepository {
             badgeTitle: "Pemompa Hebat",
             gameplayDurationSeconds: 60,
             gameType: .pumpBall
-        ),
-        Scenario(
-            id: "petualangan-awan",
-            title: "Petualangan Awan",
-            placeTag: "Rumah",
-            emotionTag: "Bersemangat",
-            introScene1: "Awan-awan ajaib mengundangmu untuk terbang bersama mereka hari ini!",
-            introScene2: "Sentuh setiap awan yang melayang dan rasakan betapa ringannya perasaanmu. Ayo terbang!",
-            bubbleColor: .cyan,
-            bubbleCount: 15,
-            badgeTitle: "Penjelajah Awan",
-            gameplayDurationSeconds: 50,
-            isLocked: true
         ),
     ]
 
