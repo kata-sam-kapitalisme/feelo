@@ -2,6 +2,7 @@ import SwiftUI
 
 struct BubbleOutroView: View {
     @Environment(Router.self) private var router
+    @State private var speech = SpeechManager()
 
     var body: some View {
         ZStack {
@@ -59,6 +60,12 @@ struct BubbleOutroView: View {
                     .padding(.bottom, 16)
             }
             .padding(32)
+        }
+        .onAppear {
+            speech.speak("Kamu berhasil memecahkan semua gelembung! Kamu sangat bersemangat dan melompat dengan bahagia.")
+        }
+        .onDisappear {
+            speech.stop()
         }
         .onTapGesture {
             router.currentScreen = .badge
