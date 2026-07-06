@@ -44,6 +44,7 @@ struct BadgeView: View {
                 }
 
                 Button {
+                    SoundManager.shared.playClick()
                     router.currentScreen = .home
                 } label: {
                     Text("Kembali ke Beranda")

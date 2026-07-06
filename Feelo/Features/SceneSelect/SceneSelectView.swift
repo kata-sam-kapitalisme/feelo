@@ -55,6 +55,7 @@ struct SceneSelectView: View {
                                     locked: isLocked(scenario)
                                 ) {
                                     if !isLocked(scenario) {
+                                        SoundManager.shared.playLevelUp()
                                         router.selectedScenario = scenario
                                         router.currentScreen = .intro
                                     }
@@ -75,6 +76,7 @@ struct SceneSelectView: View {
         HStack(alignment: .center) {
             // Back button
             Button {
+                SoundManager.shared.playClick()
                 router.currentScreen = .home
             } label: {
                 ZStack {

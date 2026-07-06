@@ -123,7 +123,7 @@ struct PlaceCard: View {
             .frame(width: geo.size.width, height: geo.size.height, alignment: .bottom)
         }
         .contentShape(Rectangle())
-        .onTapGesture {
+        .onTapWithSound {
             if !place.isLocked { onTap() }
         }
     }

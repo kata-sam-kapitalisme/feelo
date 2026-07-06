@@ -6,7 +6,10 @@ struct ActivityCard: View {
     let action: () -> Void
 
     var body: some View {
-        Button(action: action) {
+        Button(action: {
+            SoundManager.shared.playClick()
+            action()
+        }) {
             VStack(alignment: .leading, spacing: 8) {
                 RoundedRectangle(cornerRadius: 12)
                     .fill(color)

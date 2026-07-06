@@ -167,15 +167,40 @@ private struct CelebrationOverlay: View {
                 Text(goalMet ? "Kamu luar biasa!" : "Kerja bagus!")
                     .font(.title)
                     .foregroundStyle(.white)
-                
-//                HStack(spacing: 6) {
-//                    ForEach(0..<max(1, score), id: \.self) { _ in
-//                        Image(systemName: "star.fill")
-//                            .font(.title)
-//                            .foregroundStyle(.yellow)
-//                    }
-//                }
-                
+                HStack(spacing: 6) {
+                    ForEach(0..<max(1, score), id: \.self) { _ in
+                        Image(systemName: "star.fill")
+                            .font(.title)
+                            .foregroundStyle(.yellow)
+                    }
+                }
+
+                HStack(spacing: 20) {
+                    Button(action: {
+                        SoundManager.shared.playClick()
+                        onReplay()
+                    }) {
+                        Label("Main Lagi!", systemImage: "arrow.clockwise")
+                            .font(.title2.bold())
+                            .padding(.horizontal, 28)
+                            .padding(.vertical, 14)
+                            .background(bubbleColor, in: Capsule())
+                            .foregroundStyle(.white)
+                    }
+
+                    Button(action: {
+                        SoundManager.shared.playClick()
+                        onExit()
+                    }) {
+                        Label("Selesai", systemImage: "house.fill")
+                            .font(.title2.bold())
+                            .padding(.horizontal, 28)
+                            .padding(.vertical, 14)
+                            .background(.white.opacity(0.2), in: Capsule())
+                            .foregroundStyle(.white)
+                    }
+                }
+
                 // Teks Countdown
                 Text("Melanjutkan dalam \(countdown)...")
                     .font(.headline)
