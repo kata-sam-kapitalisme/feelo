@@ -15,6 +15,7 @@ struct Scenario: Identifiable {
     let bubbleColor: Color
     let bubbleCount: Int
     let badgeTitle: String
+    let badgeImage: String
     let gameplayDurationSeconds: Double
     var gameType: GameType = .bubblePop
     var isLocked: Bool = false
