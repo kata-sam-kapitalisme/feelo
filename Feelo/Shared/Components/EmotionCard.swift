@@ -67,7 +67,7 @@ struct EmotionCard: View {
             .frame(width: size, height: size)
         }
         .contentShape(Rectangle())
-        .onTapGesture {
+        .onTapWithSound {
             if !emotion.isLocked { onTap() }
         }
     }

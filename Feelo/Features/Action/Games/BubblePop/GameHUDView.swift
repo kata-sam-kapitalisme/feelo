@@ -124,7 +124,10 @@ private struct CelebrationOverlay: View {
                 }
 
                 HStack(spacing: 20) {
-                    Button(action: onReplay) {
+                    Button(action: {
+                        SoundManager.shared.playClick()
+                        onReplay()
+                    }) {
                         Label("Main Lagi!", systemImage: "arrow.clockwise")
                             .font(.title2.bold())
                             .padding(.horizontal, 28)
@@ -133,7 +136,10 @@ private struct CelebrationOverlay: View {
                             .foregroundStyle(.white)
                     }
 
-                    Button(action: onExit) {
+                    Button(action: {
+                        SoundManager.shared.playClick()
+                        onExit()
+                    }) {
                         Label("Selesai", systemImage: "house.fill")
                             .font(.title2.bold())
                             .padding(.horizontal, 28)

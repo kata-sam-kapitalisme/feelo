@@ -10,7 +10,7 @@ struct PumpBallIntroView: View {
                 .font(.title)
                 .fontWeight(.bold)
         }
-        .onTapGesture {
+        .onTapWithSound {
             router.currentScreen = .action
         }
     }
