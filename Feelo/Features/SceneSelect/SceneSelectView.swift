@@ -55,6 +55,7 @@ struct SceneSelectView: View {
                                     locked: isLocked(scenario)
                                 ) {
                                     if !isLocked(scenario) {
+                                        SoundManager.shared.playLevelUp()
                                         router.selectedScenario = scenario
                                         router.currentScreen = .intro
                                     }
@@ -137,10 +138,7 @@ private struct SceneGridCard: View {
     private let cardAspect: CGFloat = 4 / 3
 
     var body: some View {
-        Button(action: {
-            SoundManager.shared.playClick()
-            onTap()
-        }) {
+        Button(action: onTap) {
             GeometryReader { geo in
                 ZStack(alignment: .bottom) {
                     // ── Thumbnail ──────────────────────────────
