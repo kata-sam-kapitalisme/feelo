@@ -5,43 +5,42 @@ enum ScenarioRepository {
         Scenario(
             id: "pecahkan-gelembung",
             title: "Pecahkan Gelembung",
+            placeTag: "Taman Bermain",
+            emotionTag: "Bersemangat",
             introScene1: "Kita akan belajar memecahkan gelembung! Siap?",
             introScene2: "Gunakan tanganmu untuk memecahkan semua gelembung yang muncul. Yuk mulai!",
             bubbleColor: .blue,
             bubbleCount: 12,
-            badgeTitle: "Gelembung Ceria"
+            badgeTitle: "Gelembung Ceria",
+            badgeImage: "sticker_bubble",
+            gameplayDurationSeconds: 45
         ),
         Scenario(
-            id: "si-kancil",
-            title: "Si Kancil",
-            introScene1: "Si Kancil adalah hewan yang cerdik dan berani. Hari ini kita ikut petualangannya!",
-            introScene2: "Bantu Si Kancil melompati rintangan dengan memecahkan gelembung di depannya. Siap melompat?",
-            bubbleColor: .green,
-            bubbleCount: 10,
-            badgeTitle: "Kancil Pemberani"
-        ),
-        Scenario(
-            id: "bintang-kecil",
-            title: "Bintang Kecil",
-            introScene1: "Jauh di langit malam, ada bintang kecil yang ingin bersinar lebih terang.",
-            introScene2: "Pecahkan gelembung awan yang menutupi bintang agar ia bisa bersinar untuk semua orang!",
-            bubbleColor: .yellow,
-            bubbleCount: 8,
-            badgeTitle: "Bintang Bersinar"
-        ),
-        Scenario(
-            id: "petualangan-awan",
-            title: "Petualangan Awan",
-            introScene1: "Awan-awan ajaib mengundangmu untuk terbang bersama mereka hari ini!",
-            introScene2: "Sentuh setiap awan yang melayang dan rasakan betapa ringannya perasaanmu. Ayo terbang!",
-            bubbleColor: .cyan,
-            bubbleCount: 15,
-            badgeTitle: "Penjelajah Awan"
+            id: "pompa-bola",
+            title: "Pompa Bola",
+            placeTag: "Taman Bermain",
+            emotionTag: "Kecewa",
+            introScene1: "Ada bola yang kempes di taman! Ayo kita pompa bersama!",
+            introScene2: "Gerakkan tanganmu naik dan turun untuk memompa bola. Pompa sampai penuh, yuk!",
+            bubbleColor: .orange,
+            bubbleCount: 0,
+            badgeTitle: "Pom-pom-pa!",
+            badgeImage: "sticker_basket",
+            gameplayDurationSeconds: 60,
+            gameType: .pumpBall
         ),
     ]
 
     static func scenario(for id: String) -> Scenario? {
         all.first { $0.id == id }
+    }
+
+    static func scenarios(forPlace place: String) -> [Scenario] {
+        all.filter { $0.placeTag == place }
+    }
+
+    static func scenarios(forEmotion emotion: String) -> [Scenario] {
+        all.filter { $0.emotionTag == emotion }
     }
 
     static var defaultScenario: Scenario { all[0] }

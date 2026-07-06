@@ -5,7 +5,9 @@ struct BadgeView: View {
 
     var body: some View {
         ZStack {
-            Color(.systemGroupedBackground)
+            Image("bg_waves")
+                .resizable()
+                .scaledToFill()
                 .ignoresSafeArea()
 
             VStack(spacing: 32) {
@@ -42,6 +44,7 @@ struct BadgeView: View {
                 }
 
                 Button {
+                    SoundManager.shared.playClick()
                     router.currentScreen = .home
                 } label: {
                     Text("Kembali ke Beranda")
