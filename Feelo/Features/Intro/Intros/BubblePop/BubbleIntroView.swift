@@ -28,29 +28,28 @@ struct BubbleIntroView: View {
                     .id(viewModel.characterGifName)
                     .frame(width: size, height: size)
                     .clipped()
-                    .offset(y: isThree ? 80 : 0)
+
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
             }
             .ignoresSafeArea()
 
-            // Layer 4: speech bubble + subtitle
+            // Layer 4: bubbles overlay (scene 4 only)
+            if viewModel.currentScene == .four {
+                GeometryReader { geo in
+                    let size = geo.size.height * 0.9
+                    GifImageView(name: "bubbles", objectFit: "contain")
+                        .frame(width: size, height: size)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                }
+                .ignoresSafeArea()
+            }
+
+            // Layer 5: speech bubble + subtitle
             VStack {
-                Text(viewModel.subtitle)
-                    .font(.title3)
-                    .fontWeight(.bold)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 32)
-                    .padding(.vertical, 20)
-                    .frame(maxWidth: 560)
-                    .background(
-                        RoundedRectangle(cornerRadius: 20)
-                            .fill(.white)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 20)
-                                    .stroke(.gray.opacity(0.4), lineWidth: 2)
-                            )
-                            .shadow(radius: 8)
-                    )
+                Spacer()
+                    .frame(maxHeight: 40)
+
+                CloudTextBubble(text: viewModel.subtitle)
                     .animation(.easeInOut(duration: 0.3), value: viewModel.currentScene)
 
                 Spacer()

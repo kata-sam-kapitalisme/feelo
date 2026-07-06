@@ -15,7 +15,7 @@ final class BubbleIntroViewModel {
         switch currentScene {
         case .one, .two: return "1"
         case .three: return "2"
-        case .four: return "3"
+        case .four: return "2"
         }
     }
 

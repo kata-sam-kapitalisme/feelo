@@ -12,6 +12,7 @@ struct GifImageView: UIViewRepresentable {
         webView.scrollView.isScrollEnabled = false
         webView.scrollView.bounces = false
         webView.isUserInteractionEnabled = false
+        webView.scrollView.contentInsetAdjustmentBehavior = .never
         guard let url = Bundle.main.url(forResource: name, withExtension: "gif") else { return webView }
         let directory = url.deletingLastPathComponent()
         let filename = url.lastPathComponent
