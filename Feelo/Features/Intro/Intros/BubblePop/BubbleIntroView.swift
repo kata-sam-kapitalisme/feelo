@@ -3,6 +3,7 @@ import SwiftUI
 struct BubbleIntroView: View {
     @Environment(Router.self) private var router
     @State private var viewModel = BubbleIntroViewModel()
+    @State private var speech = SpeechManager()
 
     var body: some View {
         ZStack {
@@ -60,6 +61,12 @@ struct BubbleIntroView: View {
                     .padding(.bottom, 16)
             }
             .padding(32)
+        }
+        .onAppear {
+            speech.speak(viewModel.subtitle)
+        }
+        .onChange(of: viewModel.currentScene) { _, _ in
+            speech.speak(viewModel.subtitle)
         }
         .onTapGesture {
             if viewModel.advance() {
