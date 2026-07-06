@@ -2,6 +2,6 @@
 //  StickerView.swift
 //  
 //
-//  Created by Shanon Giuly I
+//  Created by Shanon Giuly Istanto
 //
 
