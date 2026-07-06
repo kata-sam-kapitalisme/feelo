@@ -98,7 +98,7 @@ struct CompletionView: View {
 
 #Preview {
     let router = Router()
-    router.selectedScenario = ScenarioRepository.all.first
+    router.selectedScenario = ScenarioRepository.all.last
     
     return CompletionView()
         .environment(router)
