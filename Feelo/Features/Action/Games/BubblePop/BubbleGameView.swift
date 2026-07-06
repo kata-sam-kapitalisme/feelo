@@ -11,17 +11,32 @@ struct BubbleGameView: View {
         GeometryReader { geo in
             ZStack {
                 CameraView(cameraManager: cameraManager).ignoresSafeArea()
+                GifImageView(name: "Background Bubble")
+                    .ignoresSafeArea()
+                    .blendMode(.screen)
+                    .opacity(1)
                 TimelineView(.animation) { timeline in
                     Canvas { context, size in
-                        for bubble in gameEngine.bubbles where !bubble.isPopped {
+                        let bubbleImage = context.resolve(Image("bubble"))
+                        let splashImage = context.resolve(Image("bubble-splash"))
+                        for bubble in gameEngine.bubbles {
+                            let r = bubble.isPopped ? bubble.radius : bubble.currentRadius()
                             let rect = CGRect(
-                                x: bubble.position.x - bubble.radius,
-                                y: bubble.position.y - bubble.radius,
-                                width: bubble.radius * 2,
-                                height: bubble.radius * 2
+                                x: bubble.position.x - r,
+                                y: bubble.position.y - r,
+                                width: r * 2,
+                                height: r * 2
                             )
-                            context.fill(Path(ellipseIn: rect), with: .color(bubble.color.opacity(0.7)))
-                            context.stroke(Path(ellipseIn: rect), with: .color(.white.opacity(0.5)), lineWidth: 2)
+                            if bubble.isPopped, let poppedAt = bubble.poppedAt {
+                                let elapsed = Date().timeIntervalSince(poppedAt)
+                                let alpha = max(0, 1 - elapsed / 0.35)
+                                var splashCtx = context
+                                splashCtx.opacity = alpha
+                                let splashRect = rect.insetBy(dx: -bubble.radius * 0.3, dy: -bubble.radius * 0.3)
+                                splashCtx.draw(splashImage, in: splashRect)
+                            } else if !bubble.isPopped {
+                                context.draw(bubbleImage, in: rect)
+                            }
                         }
                         for normalized in poseManager.wristPoints {
                             let pt = poseManager.toScreen(normalized, in: size)
