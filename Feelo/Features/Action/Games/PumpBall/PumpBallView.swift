@@ -13,70 +13,69 @@ struct PumpBallView: View {
         return poseManager.wristPoints.map(\.y).reduce(0, +) / CGFloat(poseManager.wristPoints.count)
     }
 
-    // Maps wrist height to handle Y offset: hands up → handle up (negative offset)
-    private var handleYOffset: CGFloat {
-        let raw = (0.5 - normalizedWristY) * 160
-        return max(-80, min(80, raw))
-    }
-
     var body: some View {
         GeometryReader { geo in
             ZStack {
                 // Layer 1: Camera background
                 CameraView(cameraManager: cameraManager).ignoresSafeArea()
 
-                // Layer 2: Environment trees
+                // Layer 2: GIF background
+                GifImageView(name: "Background Bubble")
+                    .ignoresSafeArea()
+                    .blendMode(.screen)
+
+                // Layer 3: Pump
                 VStack {
                     Spacer()
                     HStack(alignment: .bottom, spacing: 0) {
-                        Image("tree_left")
+                        Spacer().frame(width: geo.size.width * 0.30)
+                        Image(gameEngine.isHandsUp ? "pompa_naik" : "pompa_turun")
                             .resizable()
                             .scaledToFit()
-                            .frame(height: geo.size.height * 0.45)
+                            .frame(height: gameEngine.isHandsUp ? geo.size.height * 0.55 : geo.size.height * 0.45)
+                            .animation(.easeInOut(duration: 0.15), value: gameEngine.isHandsUp)
                         Spacer()
-                        Image("tree_right")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: geo.size.height * 0.45)
-                    }
-                }
-                .ignoresSafeArea()
-
-                // Layer 3: Ball + Pump
-                VStack {
-                    Spacer()
-                    HStack(alignment: .bottom, spacing: 0) {
-                        Spacer()
-
-                        // Pump: handle sits above base, moves with wrist
-                        ZStack(alignment: .bottom) {
-                            Image("pump_handle")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: geo.size.height * 0.35)
-                                .offset(y: handleYOffset)
-                                .animation(.interactiveSpring(response: 0.25), value: handleYOffset)
-                            Image("pump_base")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: geo.size.height * 0.22)
-                        }
-                        .frame(width: geo.size.width * 0.22)
-
-                        Spacer()
-
-                        // Ball inflates as pumpCount grows
-                        Image("ball_graphic")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: geo.size.height * 0.38)
-                            .scaleEffect(0.3 + 0.7 * gameEngine.inflationProgress)
-                            .animation(.spring(response: 0.35, dampingFraction: 0.6), value: gameEngine.inflationProgress)
-
-                        Spacer().frame(width: 24)
                     }
                     .padding(.bottom, 16)
                 }
+
+                // Layer 4: Ball (conditional states)
+                ZStack {
+                    if !gameEngine.isGameFinished {
+                        // Deflated/inflating ball
+                        VStack {
+                            Spacer()
+                            HStack(alignment: .bottom, spacing: 0) {
+                                Spacer().frame(width: geo.size.width * 0.43)
+                                Image("bola_kempes")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: geo.size.height * 0.25)
+                                    .scaleEffect(0.4 + 0.4 * gameEngine.inflationProgress, anchor: .bottom)
+                                    .animation(.spring(response: 0.35, dampingFraction: 0.6), value: gameEngine.inflationProgress)
+                                Spacer()
+                            }
+                            .padding(.bottom, 24)
+                        }
+                        .transition(.opacity)
+                    } else {
+                        // Fully inflated ball (game complete)
+                        VStack {
+                            Spacer()
+                            HStack(alignment: .bottom, spacing: 0) {
+                                Spacer().frame(width: geo.size.width * 0.48)
+                                Image("bola_full")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: geo.size.height * 0.28)
+                                Spacer()
+                            }
+                            .padding(.bottom, 24) // aligns with bola_kempes baseline
+                        }
+                        .transition(.opacity)
+                    }
+                }
+                .animation(.easeInOut(duration: 0.35), value: gameEngine.isGameFinished)
 
                 // Layer 4: Wrist tracking dots (always visible for now)
                 Canvas { context, size in
@@ -119,6 +118,7 @@ struct PumpBallView: View {
                     }
                 }
 
+                /*
                 // Layer 6: Debug HUD (hand position + progress)
                 VStack {
                     Spacer()
@@ -129,6 +129,7 @@ struct PumpBallView: View {
                     .padding(.leading, 20)
                     .padding(.bottom, 20)
                 }
+                */
             }
             .onChange(of: poseManager.wristPoints) { _, newPoints in
                 gameEngine.processWrists(newPoints)
