@@ -5,9 +5,7 @@ struct BadgeView: View {
 
     var body: some View {
         ZStack {
-            Image("bg_waves")
-                .resizable()
-                .scaledToFill()
+            Color(.systemGroupedBackground)
                 .ignoresSafeArea()
 
             VStack(spacing: 32) {
