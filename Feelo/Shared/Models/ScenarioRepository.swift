@@ -19,7 +19,7 @@ enum ScenarioRepository {
             id: "pompa-bola",
             title: "Pompa Bola",
             placeTag: "Taman Bermain",
-            emotionTag: "Bersemangat",
+            emotionTag: "Kecewa",
             introScene1: "Ada bola yang kempes di taman! Ayo kita pompa bersama!",
             introScene2: "Gerakkan tanganmu naik dan turun untuk memompa bola. Pompa sampai penuh, yuk!",
             bubbleColor: .orange,
