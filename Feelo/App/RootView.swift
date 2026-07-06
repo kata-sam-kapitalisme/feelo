@@ -16,7 +16,7 @@ struct RootView: View {
         case .outro:
             OutroView()
         case .badge:
-            BadgeView()
+            StickerView()
         }
     }
 }
