@@ -72,3 +72,11 @@ struct BubbleOutroView: View {
         }
     }
 }
+
+#Preview {
+    let router = Router()
+    router.selectedScenario = ScenarioRepository.defaultScenario
+
+    return BubbleOutroView()
+        .environment(router)
+}
