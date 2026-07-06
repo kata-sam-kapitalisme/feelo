@@ -69,11 +69,9 @@ struct GameHUDView: View {
                 CelebrationOverlay(
                     score: gameEngine.score,
                     goalMet: gameEngine.score >= goalScore,
+                    bubbleColor: scenario.bubbleColor,
+                    onReplay: { gameEngine.reset(scenario: scenario) },
                     onExit: onExit
-                    // Sementara ini di command dulu, dibutuhkan kalo mau testing
-                    //                    bubbleColor: scenario.bubbleColor,
-                    //                    onReplay: { gameEngine.reset(scenario: scenario) },
-
                 )
                 .transition(.opacity.combined(with: .scale))
                 .animation(.spring(duration: 0.5), value: isComplete)
@@ -97,8 +95,8 @@ struct GameHUDView: View {
 private struct CelebrationOverlay: View {
     let score: Int
     let goalMet: Bool
-    //    let bubbleColor: Color
-    //    let onReplay: () -> Void
+    let bubbleColor: Color
+    let onReplay: () -> Void
     let onExit: () -> Void
     
     @State private var scale: CGFloat = 0.5
