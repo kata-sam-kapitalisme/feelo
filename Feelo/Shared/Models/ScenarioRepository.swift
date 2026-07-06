@@ -12,7 +12,7 @@ enum ScenarioRepository {
             bubbleColor: .blue,
             bubbleCount: 12,
             badgeTitle: "Gelembung Ceria",
-            badgeImage: "Bubble Sticker",
+            badgeImage: "Bubble Pop",
             gameplayDurationSeconds: 45
         ),
         Scenario(
@@ -24,7 +24,7 @@ enum ScenarioRepository {
             introScene2: "Gerakkan tanganmu naik dan turun untuk memompa bola. Pompa sampai penuh, yuk!",
             bubbleColor: .orange,
             bubbleCount: 0,
-            badgeTitle: "Pemompa Hebat",
+            badgeTitle: "Pom-pom-pa!",
             badgeImage: "Basket Sticker",
             gameplayDurationSeconds: 60,
             gameType: .pumpBall
