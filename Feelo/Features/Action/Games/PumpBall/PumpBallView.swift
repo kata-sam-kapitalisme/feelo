@@ -77,6 +77,7 @@ struct PumpBallView: View {
                 }
                 .animation(.easeInOut(duration: 0.35), value: gameEngine.isGameFinished)
 
+                /*
                 // Layer 4: Wrist tracking dots (always visible for now)
                 Canvas { context, size in
                     for normalized in poseManager.wristPoints {
@@ -89,6 +90,7 @@ struct PumpBallView: View {
                 }
                 .ignoresSafeArea()
                 .allowsHitTesting(false)
+                */
 
                 // Layer 5: Instructions (hidden when game is done)
                 if !gameEngine.isGameFinished {
