@@ -38,7 +38,7 @@ struct SceneSelectView: View {
 
                 // ── Category title ──────────────────────────────────
                 Text(filterTitle)
-                    .font(.system(size: 28, weight: .bold, design: .rounded))
+                    .font(AppFont.semiBold(40))
                     .foregroundStyle(.white)
                     .padding(.horizontal, 28)
                     .padding(.bottom, 18)
@@ -140,7 +140,7 @@ private struct SceneGridCard: View {
     var body: some View {
         Button(action: onTap) {
             GeometryReader { geo in
-                ZStack(alignment: .bottom) {
+                ZStack(alignment: .bottomLeading) {
                     // ── Thumbnail ──────────────────────────────
                     thumbnailImage(width: geo.size.width, height: geo.size.height)
 
@@ -153,12 +153,13 @@ private struct SceneGridCard: View {
                     // ── Lock icon ──────────────────────────────
                     if locked {
                         lockIcon
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                     }
 
                     // ── Title pill (bottom) ────────────────────
                     titlePill
-                        .padding(.horizontal, 10)
-                        .padding(.bottom, 10)
+                        .padding(.leading, 12)
+                        .padding(.bottom, 12)
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 20))
                 .shadow(color: .black.opacity(0.30), radius: 8, x: 0, y: 4)
@@ -206,17 +207,20 @@ private struct SceneGridCard: View {
     }
 
     private var titlePill: some View {
-        Text(scenario.title)
-            .font(.system(size: 13, weight: .bold, design: .rounded))
-            .foregroundStyle(Color(red: 0.11, green: 0.25, blue: 0.13))
-            .lineLimit(1)
-            .padding(.horizontal, 14)
-            .padding(.vertical, 7)
-            .background(
-                Capsule()
-                    .fill(Color.white.opacity(0.92))
-                    .shadow(color: .black.opacity(0.12), radius: 3, y: 1)
-            )
+        HStack(spacing: 10) {
+            Text(scenario.title)
+                .font(AppFont.semiBold(20))
+                .foregroundStyle(Color(red: 0.11, green: 0.25, blue: 0.13))
+                .lineLimit(1)
+                .multilineTextAlignment(.center)
+        }
+        .padding(.horizontal, 12)
+        .frame(height: 54)
+        .background(
+            RoundedRectangle(cornerRadius: 50)
+                .fill(Color.white.opacity(0.92))
+                .shadow(color: .black.opacity(0.12), radius: 3, y: 1)
+        )
     }
 
     // Maps placeTag to the xcassets image key
