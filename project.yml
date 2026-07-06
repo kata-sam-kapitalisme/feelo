@@ -19,7 +19,6 @@ targets:
       path: Feelo/Info.plist
       properties:
         CFBundleDisplayName: Feelo
-        NSCameraUsageDescription: "Camera is used to track your body movements for the game."
         CFBundleVersion: "1"
         CFBundleShortVersionString: "1.0"
         UILaunchScreen: {}
@@ -30,10 +29,6 @@ targets:
           - UIInterfaceOrientationLandscapeLeft
           - UIInterfaceOrientationLandscapeRight
         UIRequiresFullScreen: YES
-    dependencies:
-      - sdk: AVFoundation.framework
-      - sdk: Vision.framework
-      - sdk: WebKit.framework
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.riyanfirdausamerta.feelo

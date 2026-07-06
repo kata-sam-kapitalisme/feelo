@@ -7,8 +7,6 @@ struct RootView: View {
         switch router.currentScreen {
         case .home:
             HomeView()
-        case .sceneSelect:
-            SceneSelectView()
         case .intro:
             IntroView()
         case .action:
