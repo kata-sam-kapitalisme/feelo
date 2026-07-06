@@ -66,6 +66,7 @@ struct HomeView: View {
             Spacer()
 
             Button {
+                SoundManager.shared.playClick()
                 withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) { badgePressed = true }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                     badgePressed = false

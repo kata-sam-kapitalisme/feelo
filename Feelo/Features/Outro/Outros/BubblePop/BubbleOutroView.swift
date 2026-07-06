@@ -67,7 +67,7 @@ struct BubbleOutroView: View {
         .onDisappear {
             speech.stop()
         }
-        .onTapGesture {
+        .onTapWithSound {
             router.currentScreen = .badge
         }
     }

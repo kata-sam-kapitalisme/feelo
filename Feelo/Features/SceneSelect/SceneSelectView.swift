@@ -75,6 +75,7 @@ struct SceneSelectView: View {
         HStack(alignment: .center) {
             // Back button
             Button {
+                SoundManager.shared.playClick()
                 router.currentScreen = .home
             } label: {
                 ZStack {
@@ -136,7 +137,10 @@ private struct SceneGridCard: View {
     private let cardAspect: CGFloat = 4 / 3
 
     var body: some View {
-        Button(action: onTap) {
+        Button(action: {
+            SoundManager.shared.playClick()
+            onTap()
+        }) {
             GeometryReader { geo in
                 ZStack(alignment: .bottom) {
                     // ── Thumbnail ──────────────────────────────
