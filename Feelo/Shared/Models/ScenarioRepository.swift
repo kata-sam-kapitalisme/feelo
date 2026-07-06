@@ -12,7 +12,7 @@ enum ScenarioRepository {
             bubbleColor: .blue,
             bubbleCount: 12,
             badgeTitle: "Gelembung Ceria",
-            badgeImage: "Bubble Pop",
+            badgeImage: "sticker_bubble",
             gameplayDurationSeconds: 45
         ),
         Scenario(
@@ -25,7 +25,7 @@ enum ScenarioRepository {
             bubbleColor: .orange,
             bubbleCount: 0,
             badgeTitle: "Pom-pom-pa!",
-            badgeImage: "Basket Sticker",
+            badgeImage: "sticker_basket",
             gameplayDurationSeconds: 60,
             gameType: .pumpBall
         ),

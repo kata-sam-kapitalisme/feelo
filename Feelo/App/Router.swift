@@ -6,15 +6,17 @@ enum SceneFilter {
 
     var title: String {
         switch self {
-        case .place(let name):   return name
+        case .place(let name): return name
         case .emotion(let name): return name
         }
     }
 
     var filteredScenarios: [Scenario] {
         switch self {
-        case .place(let name):   return ScenarioRepository.scenarios(forPlace: name)
-        case .emotion(let name): return ScenarioRepository.scenarios(forEmotion: name)
+        case .place(let name):
+            return ScenarioRepository.scenarios(forPlace: name)
+        case .emotion(let name):
+            return ScenarioRepository.scenarios(forEmotion: name)
         }
     }
 }
@@ -33,4 +35,10 @@ final class Router {
     var currentScreen: AppScreen = .home
     var selectedScenario: Scenario? = nil
     var sceneFilter: SceneFilter? = nil
+
+    func goHome() {
+        selectedScenario = nil
+        sceneFilter = nil
+        currentScreen = .home
+    }
 }
