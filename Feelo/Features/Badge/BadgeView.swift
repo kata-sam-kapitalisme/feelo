@@ -2,14 +2,14 @@ import SwiftUI
 
 struct BadgeView: View {
     @Environment(Router.self) private var router
-
+    
     var body: some View {
         ZStack {
             Image("bg_waves")
                 .resizable()
                 .scaledToFill()
                 .ignoresSafeArea()
-
+            
             VStack(spacing: 32) {
                 // Badge graphic placeholder
                 Circle()
@@ -33,7 +33,7 @@ struct BadgeView: View {
                         }
                     }
                     .shadow(color: .orange.opacity(0.4), radius: 20, x: 0, y: 10)
-
+                
                 VStack(spacing: 8) {
                     Text("Selamat!")
                         .font(.largeTitle)
@@ -42,7 +42,7 @@ struct BadgeView: View {
                         .font(.title3)
                         .foregroundStyle(.secondary)
                 }
-
+                
                 Button {
                     SoundManager.shared.playClick()
                     router.currentScreen = .home
@@ -57,6 +57,9 @@ struct BadgeView: View {
                 .buttonStyle(.plain)
             }
             .padding(40)
+        }
+        .onAppear {
+            SoundManager.shared.playBGM()
         }
     }
 }
