@@ -117,44 +117,7 @@ private struct CelebrationOverlay: View {
             // Animasi Confetti di belakang teks
             ConfettiView()
             
-            //            VStack(spacing: 28) {
-            //                Text(goalMet ? "HEBAT!" : "Bagus!")
-            //                    .font(.system(size: 72, weight: .black))
-            //                    .foregroundStyle(goalMet ? .yellow : .white)
-            //                    .shadow(color: .black.opacity(0.4), radius: 6)
-            //
-            //                Text(goalMet ? "Kamu luar biasa!" : "Coba lagi yuk!")
-            //                    .font(.title)
-            //                    .foregroundStyle(.white)
-            //
-            //                HStack(spacing: 6) {
-            //                    ForEach(0..<max(1, score), id: \.self) { _ in
-            //                        Image(systemName: "star.fill")
-            //                            .font(.title)
-            //                            .foregroundStyle(.yellow)
-            //                    }
-            //                }
-            //
-            //                HStack(spacing: 20) {
-            //                    Button(action: onReplay) {
-            //                        Label("Main Lagi!", systemImage: "arrow.clockwise")
-            //                            .font(.title2.bold())
-            //                            .padding(.horizontal, 28)
-            //                            .padding(.vertical, 14)
-            //                            .background(bubbleColor, in: Capsule())
-            //                            .foregroundStyle(.white)
-            //                    }
-            //
-            //                    Button(action: onExit) {
-            //                        Label("Selesai", systemImage: "house.fill")
-            //                            .font(.title2.bold())
-            //                            .padding(.horizontal, 28)
-            //                            .padding(.vertical, 14)
-            //                            .background(.white.opacity(0.2), in: Capsule())
-            //                            .foregroundStyle(.white)
-            //                    }
-            //                }
-            //            }
+            
             
             VStack(spacing: 28) {
                 Text(goalMet ? "HEBAT!" : "Bagus!")
@@ -165,39 +128,42 @@ private struct CelebrationOverlay: View {
                 Text(goalMet ? "Kamu luar biasa!" : "Kerja bagus!")
                     .font(.title)
                     .foregroundStyle(.white)
-                HStack(spacing: 6) {
-                    ForEach(0..<max(1, score), id: \.self) { _ in
-                        Image(systemName: "star.fill")
-                            .font(.title)
-                            .foregroundStyle(.yellow)
-                    }
-                }
 
-                HStack(spacing: 20) {
-                    Button(action: {
-                        SoundManager.shared.playClick()
-                        onReplay()
-                    }) {
-                        Label("Main Lagi!", systemImage: "arrow.clockwise")
-                            .font(.title2.bold())
-                            .padding(.horizontal, 28)
-                            .padding(.vertical, 14)
-                            .background(bubbleColor, in: Capsule())
-                            .foregroundStyle(.white)
-                    }
-
-                    Button(action: {
-                        SoundManager.shared.playClick()
-                        onExit()
-                    }) {
-                        Label("Selesai", systemImage: "house.fill")
-                            .font(.title2.bold())
-                            .padding(.horizontal, 28)
-                            .padding(.vertical, 14)
-                            .background(.white.opacity(0.2), in: Capsule())
-                            .foregroundStyle(.white)
-                    }
-                }
+                // Bintang
+//                HStack(spacing: 6) {
+//                    ForEach(0..<max(1, score), id: \.self) { _ in
+//                        Image(systemName: "star.fill")
+//                            .font(.title)
+//                            .foregroundStyle(.yellow)
+//                    }
+//                }
+                
+                // Button Replay and Selesai
+//                HStack(spacing: 20) {
+//                    Button(action: {
+//                        SoundManager.shared.playClick()
+//                        onReplay()
+//                    }) {
+//                        Label("Main Lagi!", systemImage: "arrow.clockwise")
+//                            .font(.title2.bold())
+//                            .padding(.horizontal, 28)
+//                            .padding(.vertical, 14)
+//                            .background(bubbleColor, in: Capsule())
+//                            .foregroundStyle(.white)
+//                    }
+//
+//                    Button(action: {
+//                        SoundManager.shared.playClick()
+//                        onExit()
+//                    }) {
+//                        Label("Selesai", systemImage: "house.fill")
+//                            .font(.title2.bold())
+//                            .padding(.horizontal, 28)
+//                            .padding(.vertical, 14)
+//                            .background(.white.opacity(0.2), in: Capsule())
+//                            .foregroundStyle(.white)
+//                    }
+//                }
 
                 // Teks Countdown
                 Text("Melanjutkan dalam \(countdown)...")
