@@ -15,6 +15,8 @@ struct RootView: View {
             ActionView()
         case .outro:
             OutroView()
+        case .completion:
+            CompletionView()
         case .badge:
             StickerView()
         }

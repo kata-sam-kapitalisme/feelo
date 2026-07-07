@@ -47,10 +47,14 @@ struct StickerCell: View {
         switch shape {
         case .triangle, .downTriangle:
             return size.width * 0.52
+        case .circle:
+            return size.width * 0.52
         case .star:
             return size.width * 0.60
         case .square:
             return size.width * 0.55
+        case .diamond:
+            return size.width * 0.54
         }
     }
 
@@ -58,10 +62,14 @@ struct StickerCell: View {
         switch shape {
         case .triangle, .downTriangle:
             return size.height * 0.55
+        case .circle:
+            return size.height * 0.55
         case .star:
             return size.height * 0.61
         case .square:
             return size.height * 0.49
+        case .diamond:
+            return size.height * 0.56
         }
     }
 

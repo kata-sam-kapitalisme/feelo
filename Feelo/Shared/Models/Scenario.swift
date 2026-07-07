@@ -9,6 +9,7 @@ struct Scenario: Identifiable {
     let id: String
     let title: String
     let placeTag: String    // matches PlaceModel.title
+    let thumbnail: String
     let emotionTag: String  // matches EmotionModel.title
     let introScene1: String
     let introScene2: String

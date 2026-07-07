@@ -6,8 +6,10 @@ enum SceneFilter {
 
     var title: String {
         switch self {
-        case .place(let name): return name
-        case .emotion(let name): return name
+        case .place(let name):
+            return name
+        case .emotion(let name):
+            return name
         }
     }
 
@@ -27,6 +29,7 @@ enum AppScreen {
     case intro
     case action
     case outro
+    case completion
     case badge
 }
 
@@ -35,6 +38,18 @@ final class Router {
     var currentScreen: AppScreen = .home
     var selectedScenario: Scenario? = nil
     var sceneFilter: SceneFilter? = nil
+
+    func finishActivity() {
+        currentScreen = .outro
+    }
+
+    func showCompletion() {
+        if let id = selectedScenario?.id {
+            LevelProgress.markCleared(id)
+        }
+
+        currentScreen = .completion
+    }
 
     func goHome() {
         selectedScenario = nil

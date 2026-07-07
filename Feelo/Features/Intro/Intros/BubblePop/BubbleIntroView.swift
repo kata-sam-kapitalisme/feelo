@@ -22,17 +22,32 @@ struct BubbleIntroView: View {
                 .ignoresSafeArea()
 
             // Layer 3: character GIF (changes per scene) — anchored bottom-center
-            GeometryReader { geo in
-                let isThree = viewModel.characterGifName == "3" || viewModel.characterGifName == "4"
-                let size = geo.size.height * (isThree ? 0.85 : 0.4)
-                GifImageView(name: viewModel.characterGifName, objectFit: "contain")
-                    .id(viewModel.characterGifName)
-                    .frame(width: size, height: size)
-                    .clipped()
-
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-            }
-            .ignoresSafeArea()
+                        if viewModel.characterGifName != "4"{
+                            GeometryReader { geo in
+                                let isThree = viewModel.characterGifName == "3"
+                                let size = geo.size.height * (isThree ? 0.85 : 0.4)
+                                GifImageView(name: viewModel.characterGifName, objectFit: "contain")
+                                    .id(viewModel.characterGifName)
+                                    .frame(width: size, height: size)
+                                    .clipped()
+                                
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                            }
+                            .ignoresSafeArea()
+                        }
+                        if viewModel.characterGifName == "4"{
+                            GeometryReader { geo in
+                                let isThree = viewModel.characterGifName == "4"
+                                let size = geo.size.height * (isThree ? 0.95 : 0.4)
+                                GifImageView(name: viewModel.characterGifName, objectFit: "contain")
+                                    .id(viewModel.characterGifName)
+                                    .frame(width: size, height: size)
+                                    .clipped()
+                                    .offset(y: isThree ? 120 : 32)
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                            }
+                            .ignoresSafeArea()
+                        }
 
             // Layer 4: bubbles overlay (scene 4 only)
             if viewModel.currentScene == .four {
