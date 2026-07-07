@@ -5,11 +5,10 @@ struct GameHUDView: View {
     let scenario: Scenario
     let onExit: (Bool) -> Void
 
-    private let goalScore = 4
+    private let goalScore = 10
 
-    private var progress: Double {
-        guard scenario.gameplayDurationSeconds > 0 else { return 0 }
-        return gameEngine.timeRemaining / scenario.gameplayDurationSeconds
+    private var shownScore: Int {
+        min(gameEngine.score, goalScore)
     }
 
     private var goalMet: Bool {
@@ -23,51 +22,20 @@ struct GameHUDView: View {
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                GeometryReader { geo in
-                    ZStack(alignment: .leading) {
-                        Rectangle()
-                            .fill(Color.white.opacity(0.3))
-
-                        Rectangle()
-                            .fill(timerColor)
-                            .frame(width: geo.size.width * max(0, progress))
-                            .animation(.linear(duration: 0.1), value: progress)
-                    }
-                }
-                .frame(height: 10)
-
                 HStack {
-                    HStack(spacing: 4) {
-                        Image(systemName: "star.fill")
-                            .foregroundStyle(.yellow)
-
-                        Text("\(gameEngine.score)")
-                            .font(.title2.bold())
-                            .foregroundStyle(.white)
-                            .contentTransition(.numericText())
-                            .animation(.bouncy, value: gameEngine.score)
-                    }
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 6)
-                    .background(.black.opacity(0.4), in: Capsule())
+                    bubbleCounter
 
                     Spacer()
-
-                    Text(timeString)
-                        .font(.title3.bold())
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 6)
-                        .background(.black.opacity(0.4), in: Capsule())
                 }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
+                .padding(.horizontal, 18)
+                .padding(.top, 18)
+
+                Spacer()
             }
-            .background(.ultraThinMaterial.opacity(0.6))
 
             if gameEnded {
                 CelebrationOverlay(
-                    score: gameEngine.score,
+                    score: shownScore,
                     goalMet: goalMet,
                     onExit: {
                         onExit(goalMet)
@@ -80,12 +48,31 @@ struct GameHUDView: View {
         }
     }
 
-    private var timerColor: Color {
-        progress > 0.5 ? .green : progress > 0.25 ? .yellow : .red
-    }
+    private var bubbleCounter: some View {
+        HStack(spacing: 10) {
+            Image("bubble")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 64, height: 64)
 
-    private var timeString: String {
-        let t = Int(gameEngine.timeRemaining)
-        return String(format: "%d:%02d", t / 60, t % 60)
+            Text("\(shownScore)/\(goalScore)")
+                .font(AppFont.bold(24))
+                .foregroundStyle(.white)
+                .contentTransition(.numericText())
+                .animation(.bouncy, value: shownScore)
+                .frame(width: 74, alignment: .leading)
+        }
+        .padding(.leading, 12)
+        .padding(.trailing, 16)
+        .padding(.vertical, 8)
+        .background(
+            Capsule()
+                .fill(Color.black.opacity(0.38))
+        )
+        .overlay {
+            Capsule()
+                .stroke(.white.opacity(0.22), lineWidth: 1.5)
+        }
+        .shadow(color: .black.opacity(0.16), radius: 6, x: 0, y: 3)
     }
 }

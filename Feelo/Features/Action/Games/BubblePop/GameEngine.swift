@@ -5,7 +5,7 @@ import UIKit
 final class GameEngine {
     var bubbles: [Bubble] = []
     var score: Int = 0
-    var timeRemaining: Double = 30
+    var timeRemaining: Double = 260
     var isFinished: Bool = false
 
     private var screenSize: CGSize = .zero
@@ -52,7 +52,7 @@ final class GameEngine {
     private func spawnWave() {
         guard screenSize.width > 0 else { return }
         waveCount += 1
-        let count = 4
+        let count = 12
         var newBubbles: [Bubble] = []
         let padding: CGFloat = 70
         for _ in 0..<count {

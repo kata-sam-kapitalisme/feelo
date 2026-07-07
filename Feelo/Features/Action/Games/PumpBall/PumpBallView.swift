@@ -102,17 +102,19 @@ struct PumpBallView: View {
 
                             RoundedRectangle(cornerRadius: 20)
                                 .fill(.white.opacity(0.88))
-                                .frame(width: geo.size.width * 0.52, height: 80)
+                                .frame(width: geo.size.width * 0.72, height: geo.size.height * 0.17)
                                 .shadow(color: .black.opacity(0.12), radius: 8, y: 4)
+                                .offset(y: -250)
 
                             VStack(spacing: 4) {
                                 Text("Yuk, Pompa Bolanya!")
-                                    .font(AppFont.bold(22))
+                                    .font(AppFont.bold(46))
 
                                 Text("Gerakkan tanganmu naik dan turun\nuntuk memompa bola!")
-                                    .font(AppFont.semiBold(16))
+                                    .font(AppFont.semiBold(34))
                                     .multilineTextAlignment(.center)
                             }
+                            .offset(y: -250)
                         }
                         .padding(.top, 20)
 

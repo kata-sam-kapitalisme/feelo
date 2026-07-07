@@ -4,7 +4,7 @@ import UIKit
 @Observable
 final class PumpGameEngine {
     private(set) var pumpCount: Int = 0
-    let requiredPumps: Int = 5
+    let requiredPumps: Int = 8
     private(set) var isGameFinished: Bool = false
 
     private(set) var isHandsUp: Bool = false
