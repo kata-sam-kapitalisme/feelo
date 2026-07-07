@@ -1,49 +1,50 @@
 import SwiftUI
+import UIKit
 
 struct SceneSelectView: View {
     @Environment(Router.self) private var router
-    
+
     private let columns = [
         GridItem(.flexible(), spacing: 16),
         GridItem(.flexible(), spacing: 16),
         GridItem(.flexible(), spacing: 16)
     ]
-    
+
     private var scenarios: [Scenario] {
         router.sceneFilter?.filteredScenarios ?? []
     }
-    
+
     private var filterTitle: String {
         router.sceneFilter?.title ?? "Semua Cerita"
     }
-    
+
     private func isLocked(_ scenario: Scenario) -> Bool {
         scenario.isLocked
     }
-    
+
+    private func isCleared(_ scenario: Scenario) -> Bool {
+        LevelProgress.isCleared(scenario.id)
+    }
+
     var body: some View {
         ZStack(alignment: .topLeading) {
-            // Background
             Image("bg_waves")
                 .resizable()
                 .scaledToFill()
                 .ignoresSafeArea()
-            
+
             VStack(alignment: .leading, spacing: 0) {
-                // ── Header ──────────────────────────────────────────
                 header
                     .padding(.horizontal, 28)
                     .padding(.top, 20)
                     .padding(.bottom, 8)
-                
-                // ── Category title ──────────────────────────────────
+
                 Text(filterTitle)
                     .font(AppFont.semiBold(40))
                     .foregroundStyle(.white)
                     .padding(.horizontal, 28)
                     .padding(.bottom, 18)
-                
-                // ── Grid ────────────────────────────────────────────
+
                 if scenarios.isEmpty {
                     emptyState
                 } else {
@@ -52,14 +53,15 @@ struct SceneSelectView: View {
                             ForEach(scenarios) { scenario in
                                 SceneGridCard(
                                     scenario: scenario,
-                                    locked: isLocked(scenario)
+                                    locked: isLocked(scenario),
+                                    cleared: isCleared(scenario)
                                 ) {
-                                    if !isLocked(scenario) {
-                                        SoundManager.shared.playLevelUp()
-                                        SoundManager.shared.stopBGM()
-                                        router.selectedScenario = scenario
-                                        router.currentScreen = .intro
-                                    }
+                                    guard !isLocked(scenario) else { return }
+
+                                    SoundManager.shared.playLevelUp()
+                                    SoundManager.shared.stopBGM()
+                                    router.selectedScenario = scenario
+                                    router.currentScreen = .intro
                                 }
                             }
                         }
@@ -73,12 +75,9 @@ struct SceneSelectView: View {
             SoundManager.shared.playBGM()
         }
     }
-    
-    // MARK: - Header
-    
+
     private var header: some View {
         HStack(alignment: .center) {
-            // Back button
             Button {
                 SoundManager.shared.playClick()
                 router.currentScreen = .home
@@ -88,95 +87,105 @@ struct SceneSelectView: View {
                         .fill(Color.white)
                         .frame(width: 46, height: 46)
                         .shadow(color: .black.opacity(0.15), radius: 4, y: 2)
+
                     Image(systemName: "chevron.left")
                         .font(.system(size: 18, weight: .bold))
                         .foregroundStyle(Color(red: 0.11, green: 0.30, blue: 0.14))
                 }
             }
             .buttonStyle(.plain)
-            
+
             Spacer()
-            
-            // Feelo logo
+
             Image("logo")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 250, height: 109.81068420410156)
         }
     }
-    
-    // MARK: - Empty State
-    
+
     private var emptyState: some View {
         VStack(spacing: 14) {
             Image(systemName: "tray.fill")
                 .font(.system(size: 44))
                 .foregroundStyle(.white.opacity(0.35))
+
             Text("Belum ada cerita di sini")
-                .font(.system(.body, design: .rounded, weight: .semibold))
+                .font(AppFont.semiBold(18))
                 .foregroundStyle(.white.opacity(0.45))
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 
-// MARK: - SceneFilter helpers
-
 private extension SceneFilter {
     var iconName: String {
         switch self {
-        case .place:   return "mappin.circle.fill"
+        case .place: return "mappin.circle.fill"
         case .emotion: return "face.smiling.fill"
         }
     }
 }
 
-// MARK: - SceneGridCard
-
 private struct SceneGridCard: View {
     let scenario: Scenario
     let locked: Bool
+    let cleared: Bool
     let onTap: () -> Void
-    
-    // Aspect ratio matching the screenshot (roughly 4:3)
+
     private let cardAspect: CGFloat = 4 / 3
-    
+    private let corner: CGFloat = 28
+
     var body: some View {
         Button(action: onTap) {
             GeometryReader { geo in
                 ZStack(alignment: .bottomLeading) {
-                    // ── Thumbnail ──────────────────────────────
                     thumbnailImage(width: geo.size.width, height: geo.size.height)
-                    
-                    // ── Lock overlay (darkens entire card) ─────
-                    if locked {
-                        RoundedRectangle(cornerRadius: 20)
-                            .fill(Color.black.opacity(0.50))
+
+                    if cleared && !locked {
+                        RoundedRectangle(cornerRadius: corner, style: .continuous)
+                            .fill(Color.black.opacity(0.58))
                     }
-                    
-                    // ── Lock icon ──────────────────────────────
+
+                    if locked {
+                        RoundedRectangle(cornerRadius: corner, style: .continuous)
+                            .fill(Color.black.opacity(0.58))
+                    }
+
+                    titlePill
+                        .padding(.leading, 18)
+                        .padding(.bottom, 18)
+
                     if locked {
                         lockIcon
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                     }
-                    
-                    // ── Title pill (bottom) ────────────────────
-                    titlePill
-                        .padding(.leading, 12)
-                        .padding(.bottom, 12)
+
+                    if cleared && !locked {
+                        clearedIcon
+                            .padding(.top, 26)
+                            .padding(.trailing, 26)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                    }
                 }
-                .clipShape(RoundedRectangle(cornerRadius: 20))
+                .clipShape(RoundedRectangle(cornerRadius: corner, style: .continuous))
+                .overlay {
+                    if cleared && !locked {
+                        RoundedRectangle(cornerRadius: corner, style: .continuous)
+                            .stroke(Color(red: 255 / 255, green: 211 / 255, blue: 82 / 255), lineWidth: 4)
+                    }
+                }
                 .shadow(color: .black.opacity(0.30), radius: 8, x: 0, y: 4)
             }
             .aspectRatio(cardAspect, contentMode: .fit)
         }
         .buttonStyle(.plain)
     }
-    
-    // Thumbnail: use asset image if available, else coloured gradient placeholder
+
     @ViewBuilder
     private func thumbnailImage(width: CGFloat, height: CGFloat) -> some View {
-        let imageName = "place_\(placeImageKey(scenario.placeTag))"
+        let imageName = "place_\(placeImageKey(scenario.thumbnail))"
+
         if UIImage(named: imageName) != nil {
             Image(imageName)
                 .resizable()
@@ -184,9 +193,11 @@ private struct SceneGridCard: View {
                 .frame(width: width, height: height)
                 .clipped()
         } else {
-            // Coloured placeholder gradient
             LinearGradient(
-                colors: [scenario.bubbleColor.opacity(0.85), scenario.bubbleColor.opacity(0.4)],
+                colors: [
+                    scenario.bubbleColor.opacity(0.85),
+                    scenario.bubbleColor.opacity(0.4)
+                ],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
@@ -197,45 +208,56 @@ private struct SceneGridCard: View {
             )
         }
     }
-    
+
+    private var clearedIcon: some View {
+        ZStack {
+            Circle()
+                .fill(Color.white)
+                .frame(width: 82, height: 82)
+                .shadow(color: .black.opacity(0.18), radius: 8, y: 4)
+
+            Image(systemName: "checkmark")
+                .font(.system(size: 34, weight: .black))
+                .foregroundStyle(Color(red: 20 / 255, green: 170 / 255, blue: 95 / 255))
+        }
+    }
+
     private var lockIcon: some View {
         ZStack {
             Circle()
                 .fill(Color.white)
-                .frame(width: 52, height: 52)
+                .frame(width: 62, height: 62)
                 .shadow(color: .black.opacity(0.15), radius: 4, y: 2)
+
             Image(systemName: "lock.fill")
-                .font(.system(size: 22, weight: .bold))
+                .font(.system(size: 26, weight: .bold))
                 .foregroundStyle(Color.orange)
         }
     }
-    
+
     private var titlePill: some View {
-        HStack(spacing: 10) {
-            Text(scenario.title)
-                .font(AppFont.semiBold(20))
-                .foregroundStyle(Color(red: 0.11, green: 0.25, blue: 0.13))
-                .lineLimit(1)
-                .multilineTextAlignment(.center)
-        }
-        .padding(.horizontal, 12)
-        .frame(height: 54)
-        .background(
-            RoundedRectangle(cornerRadius: 50)
-                .fill(Color.white.opacity(0.92))
-                .shadow(color: .black.opacity(0.12), radius: 3, y: 1)
-        )
+        Text(scenario.title)
+            .font(AppFont.semiBold(22))
+            .foregroundStyle(Color(red: 0.11, green: 0.25, blue: 0.13))
+            .lineLimit(1)
+            .multilineTextAlignment(.center)
+            .padding(.horizontal, 18)
+            .frame(height: 62)
+            .background(
+                RoundedRectangle(cornerRadius: 50, style: .continuous)
+                    .fill(Color.white.opacity(0.95))
+                    .shadow(color: .black.opacity(0.12), radius: 3, y: 1)
+            )
     }
-    
-    // Maps placeTag to the xcassets image key
+
     private func placeImageKey(_ tag: String) -> String {
         switch tag.lowercased() {
         case "taman bermain": return "taman"
-        case "sekolah":       return "sekolah"
-        case "rumah":         return "rumah"
-        case "pantai":        return "pantai"
-        case "kebun":         return "kebun"
-        default:              return tag.lowercased()
+        case "sekolah": return "sekolah"
+        case "rumah": return "rumah"
+        case "pantai": return "pantai"
+        case "kebun": return "kebun"
+        default: return tag.lowercased()
         }
     }
 }

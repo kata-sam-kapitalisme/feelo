@@ -22,6 +22,9 @@ struct LockedSticker: View {
         case .triangle:
             Triangle(dir: .up)
                 .fill(StickerTheme.locked)
+        case .circle:
+            Circle()
+                .fill(StickerTheme.locked)
         case .star:
             Star()
                 .fill(StickerTheme.locked)
@@ -29,7 +32,10 @@ struct LockedSticker: View {
             Triangle(dir: .down)
                 .fill(StickerTheme.locked)
         case .square:
-            RoundedRectangle(cornerRadius: 38, style: .continuous)
+            RoundedRectangle(cornerRadius: 40, style: .continuous)
+                .fill(StickerTheme.locked)
+        case .diamond:
+            Diamond()
                 .fill(StickerTheme.locked)
         }
     }
@@ -46,7 +52,7 @@ struct LockedSticker: View {
             return -size.height * 0.03
         case .star:
             return size.height * 0.03
-        case .square:
+        case .circle, .square, .diamond:
             return 0
         }
     }
@@ -78,30 +84,45 @@ private struct Triangle: Shape {
             ]
         }
 
-        let radius = min(rect.width, rect.height) * 0.14
+        let radius = min(rect.width, rect.height) * 0.20
         return RoundPath.make(points, radius: radius)
     }
 }
 
 private struct Star: Shape {
     func path(in rect: CGRect) -> Path {
-        let c = CGPoint(x: rect.midX, y: rect.midY)
+        let center = CGPoint(x: rect.midX, y: rect.midY)
         let outer = min(rect.width, rect.height) * 0.50
-        let inner = outer * 0.54
+        let inner = outer * 0.58
         var points: [CGPoint] = []
 
         for i in 0..<10 {
             let angle = (Double(i) * .pi / 5) - (.pi / 2)
             let radius = i.isMultiple(of: 2) ? outer : inner
+
             points.append(
                 CGPoint(
-                    x: c.x + CGFloat(cos(angle)) * radius,
-                    y: c.y + CGFloat(sin(angle)) * radius
+                    x: center.x + CGFloat(cos(angle)) * radius,
+                    y: center.y + CGFloat(sin(angle)) * radius
                 )
             )
         }
 
-        return RoundPath.make(points, radius: outer * 0.14)
+        return RoundPath.make(points, radius: outer * 0.20)
+    }
+}
+
+private struct Diamond: Shape {
+    func path(in rect: CGRect) -> Path {
+        let points = [
+            CGPoint(x: rect.midX, y: rect.minY),
+            CGPoint(x: rect.maxX, y: rect.midY),
+            CGPoint(x: rect.midX, y: rect.maxY),
+            CGPoint(x: rect.minX, y: rect.midY)
+        ]
+
+        let radius = min(rect.width, rect.height) * 0.16
+        return RoundPath.make(points, radius: radius)
     }
 }
 
@@ -114,14 +135,17 @@ private enum RoundPath {
             let previous = points[(i - 1 + points.count) % points.count]
             let current = points[i]
             let next = points[(i + 1) % points.count]
+
             let before = unit(from: current, to: previous)
             let after = unit(from: current, to: next)
             let maxRadius = min(distance(current, previous), distance(current, next)) * 0.42
             let corner = min(radius, maxRadius)
+
             let start = CGPoint(
                 x: current.x + before.x * corner,
                 y: current.y + before.y * corner
             )
+
             let end = CGPoint(
                 x: current.x + after.x * corner,
                 y: current.y + after.y * corner

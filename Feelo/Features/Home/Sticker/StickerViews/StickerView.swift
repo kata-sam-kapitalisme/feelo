@@ -47,6 +47,9 @@ struct StickerView: View {
             }
             .frame(width: geo.size.width, height: geo.size.height)
         }
+        .onAppear {
+            presenter.load()
+        }
         .ignoresSafeArea()
     }
 }

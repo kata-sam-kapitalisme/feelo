@@ -6,23 +6,22 @@ struct PumpBallOutroView: View {
 
     var body: some View {
         ZStack {
-            // Layer 1: static background
             if let bgImage = UIImage(named: "background") {
                 Image(uiImage: bgImage)
                     .resizable()
                     .scaledToFill()
                     .ignoresSafeArea()
             } else {
-                Color.green.opacity(0.3).ignoresSafeArea()
+                Color.green.opacity(0.3)
+                    .ignoresSafeArea()
             }
 
-            // Layer 2: animated environment GIF
             GifImageView(name: "Background Pump 2")
                 .ignoresSafeArea()
 
-            // Layer 3: character GIF — anchored bottom-center
             GeometryReader { geo in
                 let size = geo.size.height * 0.4
+
                 GifImageView(name: "pump5", objectFit: "contain")
                     .frame(width: size, height: size)
                     .clipped()
@@ -30,17 +29,17 @@ struct PumpBallOutroView: View {
             }
             .ignoresSafeArea()
 
-            // Layer 4: text overlay
             VStack {
                 Spacer()
                     .frame(maxHeight: 40)
 
                 VStack(spacing: 4) {
                     Text("Kamu berhasil mengisi bolanya lagi!")
-                        .font(.system(size: 33, weight: .bold))
+                        .font(AppFont.bold(33))
                         .multilineTextAlignment(.center)
+
                     Text("Sekarang, kamu bisa bermain bersama lagi.")
-                        .font(.system(size: 33, weight: .regular))
+                        .font(AppFont.semiBold(33))
                         .multilineTextAlignment(.center)
                 }
                 .padding(.horizontal, 48)
@@ -55,7 +54,7 @@ struct PumpBallOutroView: View {
                 Spacer()
 
                 Text("Ketuk untuk lanjut")
-                    .font(.caption)
+                    .font(AppFont.semiBold(18))
                     .foregroundStyle(.white.opacity(0.7))
                     .padding(.bottom, 16)
             }
@@ -68,14 +67,14 @@ struct PumpBallOutroView: View {
             speech.stop()
         }
         .onTapWithSound {
-            router.currentScreen = .badge
+            router.showCompletion()
         }
     }
 }
 
 #Preview(traits: .landscapeLeft) {
     let router = Router()
-    router.selectedScenario = ScenarioRepository.defaultScenario
+    router.selectedScenario = ScenarioRepository.all.last
 
     return PumpBallOutroView()
         .environment(router)
