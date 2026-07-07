@@ -5,6 +5,7 @@ enum BubbleIntroScene {
     case two
     case three
     case four
+    case five
 }
 
 @Observable
@@ -16,6 +17,7 @@ final class BubbleIntroViewModel {
         case .one, .two: return "1"
         case .three: return "2"
         case .four: return "2"
+        case .five: return "4"
         }
     }
 
@@ -29,6 +31,8 @@ final class BubbleIntroViewModel {
             return "Tilly meniup tongkat gelembung. Gelembung-gelembung mulai melayang di udara."
         case .four:
             return "Wah, gelembungnya banyak sekali! Kamu merasa bersemangat!"
+        case .five:
+            return "Ayo pecahkan gelembung-gelembungnya!"
         }
     }
 
@@ -45,6 +49,9 @@ final class BubbleIntroViewModel {
             currentScene = .four
             return false
         case .four:
+            currentScene = .five
+            return false
+        case .five:
             return true
         }
     }

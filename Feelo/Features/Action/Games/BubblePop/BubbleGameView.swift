@@ -6,6 +6,7 @@ struct BubbleGameView: View {
     @State private var cameraManager = CameraManager()
     @State private var poseManager   = PoseManager()
     @State private var gameEngine    = GameEngine()
+    @State private var showTutorial  = true
 
     var body: some View {
         GeometryReader { geo in
@@ -65,10 +66,23 @@ struct BubbleGameView: View {
                     )
                     Spacer()
                 }
+                //tambahan tutorial
+                VStack {
+                    HStack {
+                        Spacer()
+                        TutorialOverlayView(isVisible: showTutorial).padding(.top, 90).padding(.trailing, 16)
+                    }
+                    Spacer()
+                }
             }
             .onAppear {
                 let scenario = router.selectedScenario ?? ScenarioRepository.defaultScenario
                 gameEngine.configure(scenario: scenario, screenSize: geo.size)
+                //tambahan pop up tutorial 7 sec
+                Task {
+                    try? await Task.sleep(for: .seconds(7))
+                    showTutorial = false
+                }
             }
             .onChange(of: geo.size) { _, newSize in
                 guard newSize != .zero else { return }

@@ -6,6 +6,7 @@ struct PumpBallView: View {
     @State private var cameraManager = CameraManager()
     @State private var poseManager   = PoseManager()
     @State private var gameEngine    = PumpGameEngine()
+    @State private var showTutorial  = true
 
     // Normalized average wrist Y from Vision (0 = bottom, 1 = top)
     private var normalizedWristY: CGFloat {
@@ -128,6 +129,21 @@ struct PumpBallView: View {
                     }
                     .padding(.leading, 20)
                     .padding(.bottom, 20)
+                }
+                //tambahan tutorial
+                VStack {
+                    HStack {
+                        Spacer()
+                        TutorialOverlayViewPump(isVisible: showTutorial).padding(.top, 90).padding(.trailing, 16)
+                    }
+                    Spacer()
+                }
+            }
+            .onAppear {
+                //tambahan pop up tutorial 7 sec
+                Task {
+                    try? await Task.sleep(for: .seconds(7))
+                    showTutorial = false
                 }
             }
             .onChange(of: poseManager.wristPoints) { _, newPoints in
