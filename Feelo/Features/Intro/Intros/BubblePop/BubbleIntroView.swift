@@ -23,7 +23,7 @@ struct BubbleIntroView: View {
 
             // Layer 3: character GIF (changes per scene) — anchored bottom-center
             GeometryReader { geo in
-                let isThree = viewModel.characterGifName == "3"
+                let isThree = viewModel.characterGifName == "3" || viewModel.characterGifName == "4"
                 let size = geo.size.height * (isThree ? 0.85 : 0.4)
                 GifImageView(name: viewModel.characterGifName, objectFit: "contain")
                     .id(viewModel.characterGifName)
@@ -75,3 +75,4 @@ struct BubbleIntroView: View {
         }
     }
 }
+
