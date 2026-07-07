@@ -67,8 +67,16 @@ struct BubbleOutroView: View {
         .onDisappear {
             speech.stop()
         }
-        .onTapGesture {
+        .onTapWithSound {
             router.currentScreen = .badge
         }
     }
+}
+
+#Preview {
+    let router = Router()
+    router.selectedScenario = ScenarioRepository.defaultScenario
+
+    return BubbleOutroView()
+        .environment(router)
 }

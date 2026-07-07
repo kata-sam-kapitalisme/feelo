@@ -2,25 +2,25 @@ import SwiftUI
 
 struct SceneSelectView: View {
     @Environment(Router.self) private var router
-
+    
     private let columns = [
         GridItem(.flexible(), spacing: 16),
         GridItem(.flexible(), spacing: 16),
         GridItem(.flexible(), spacing: 16)
     ]
-
+    
     private var scenarios: [Scenario] {
         router.sceneFilter?.filteredScenarios ?? []
     }
-
+    
     private var filterTitle: String {
         router.sceneFilter?.title ?? "Semua Cerita"
     }
-
+    
     private func isLocked(_ scenario: Scenario) -> Bool {
         scenario.isLocked
     }
-
+    
     var body: some View {
         ZStack(alignment: .topLeading) {
             // Background
@@ -28,21 +28,21 @@ struct SceneSelectView: View {
                 .resizable()
                 .scaledToFill()
                 .ignoresSafeArea()
-
+            
             VStack(alignment: .leading, spacing: 0) {
                 // ── Header ──────────────────────────────────────────
                 header
                     .padding(.horizontal, 28)
                     .padding(.top, 20)
                     .padding(.bottom, 8)
-
+                
                 // ── Category title ──────────────────────────────────
                 Text(filterTitle)
-                    .font(.system(size: 28, weight: .bold, design: .rounded))
+                    .font(AppFont.semiBold(40))
                     .foregroundStyle(.white)
                     .padding(.horizontal, 28)
                     .padding(.bottom, 18)
-
+                
                 // ── Grid ────────────────────────────────────────────
                 if scenarios.isEmpty {
                     emptyState
@@ -55,6 +55,8 @@ struct SceneSelectView: View {
                                     locked: isLocked(scenario)
                                 ) {
                                     if !isLocked(scenario) {
+                                        SoundManager.shared.playLevelUp()
+                                        SoundManager.shared.stopBGM()
                                         router.selectedScenario = scenario
                                         router.currentScreen = .intro
                                     }
@@ -67,14 +69,18 @@ struct SceneSelectView: View {
                 }
             }
         }
+        .onAppear {
+            SoundManager.shared.playBGM()
+        }
     }
-
+    
     // MARK: - Header
-
+    
     private var header: some View {
         HStack(alignment: .center) {
             // Back button
             Button {
+                SoundManager.shared.playClick()
                 router.currentScreen = .home
             } label: {
                 ZStack {
@@ -88,9 +94,9 @@ struct SceneSelectView: View {
                 }
             }
             .buttonStyle(.plain)
-
+            
             Spacer()
-
+            
             // Feelo logo
             Image("logo")
                 .resizable()
@@ -98,9 +104,9 @@ struct SceneSelectView: View {
                 .frame(width: 250, height: 109.81068420410156)
         }
     }
-
+    
     // MARK: - Empty State
-
+    
     private var emptyState: some View {
         VStack(spacing: 14) {
             Image(systemName: "tray.fill")
@@ -131,32 +137,33 @@ private struct SceneGridCard: View {
     let scenario: Scenario
     let locked: Bool
     let onTap: () -> Void
-
+    
     // Aspect ratio matching the screenshot (roughly 4:3)
     private let cardAspect: CGFloat = 4 / 3
-
+    
     var body: some View {
         Button(action: onTap) {
             GeometryReader { geo in
-                ZStack(alignment: .bottom) {
+                ZStack(alignment: .bottomLeading) {
                     // ── Thumbnail ──────────────────────────────
                     thumbnailImage(width: geo.size.width, height: geo.size.height)
-
+                    
                     // ── Lock overlay (darkens entire card) ─────
                     if locked {
                         RoundedRectangle(cornerRadius: 20)
                             .fill(Color.black.opacity(0.50))
                     }
-
+                    
                     // ── Lock icon ──────────────────────────────
                     if locked {
                         lockIcon
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                     }
-
+                    
                     // ── Title pill (bottom) ────────────────────
                     titlePill
-                        .padding(.horizontal, 10)
-                        .padding(.bottom, 10)
+                        .padding(.leading, 12)
+                        .padding(.bottom, 12)
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 20))
                 .shadow(color: .black.opacity(0.30), radius: 8, x: 0, y: 4)
@@ -165,7 +172,7 @@ private struct SceneGridCard: View {
         }
         .buttonStyle(.plain)
     }
-
+    
     // Thumbnail: use asset image if available, else coloured gradient placeholder
     @ViewBuilder
     private func thumbnailImage(width: CGFloat, height: CGFloat) -> some View {
@@ -190,7 +197,7 @@ private struct SceneGridCard: View {
             )
         }
     }
-
+    
     private var lockIcon: some View {
         ZStack {
             Circle()
@@ -202,21 +209,24 @@ private struct SceneGridCard: View {
                 .foregroundStyle(Color.orange)
         }
     }
-
+    
     private var titlePill: some View {
-        Text(scenario.title)
-            .font(.system(size: 13, weight: .bold, design: .rounded))
-            .foregroundStyle(Color(red: 0.11, green: 0.25, blue: 0.13))
-            .lineLimit(1)
-            .padding(.horizontal, 14)
-            .padding(.vertical, 7)
-            .background(
-                Capsule()
-                    .fill(Color.white.opacity(0.92))
-                    .shadow(color: .black.opacity(0.12), radius: 3, y: 1)
-            )
+        HStack(spacing: 10) {
+            Text(scenario.title)
+                .font(AppFont.semiBold(20))
+                .foregroundStyle(Color(red: 0.11, green: 0.25, blue: 0.13))
+                .lineLimit(1)
+                .multilineTextAlignment(.center)
+        }
+        .padding(.horizontal, 12)
+        .frame(height: 54)
+        .background(
+            RoundedRectangle(cornerRadius: 50)
+                .fill(Color.white.opacity(0.92))
+                .shadow(color: .black.opacity(0.12), radius: 3, y: 1)
+        )
     }
-
+    
     // Maps placeTag to the xcassets image key
     private func placeImageKey(_ tag: String) -> String {
         switch tag.lowercased() {

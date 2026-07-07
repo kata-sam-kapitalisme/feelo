@@ -1,6 +1,3 @@
-# XcodeGen generated files
-Feelo/Info.plist
-
 # Xcode
 *.xcodeproj/
 *.xcworkspace/xcuserdata/
@@ -34,3 +31,6 @@ Carthage/Build/
 # OS
 .DS_Store
 *.DS_Store
+
+# Ignore generated plist files
+Feelo/Info.plist

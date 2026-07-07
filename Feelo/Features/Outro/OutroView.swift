@@ -9,7 +9,7 @@ struct OutroView: View {
         case .bubblePop:
             BubbleOutroView()
         case .pumpBall:
-            Color.gray.ignoresSafeArea()
+            PumpBallOutroView()
         }
     }
 }

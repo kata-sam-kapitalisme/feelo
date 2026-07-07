@@ -39,12 +39,14 @@ struct BubbleGameView: View {
                                 context.draw(bubbleImage, in: rect)
                             }
                         }
+                        /*
                         for normalized in poseManager.wristPoints {
                             let pt = poseManager.toScreen(normalized, in: size)
                             let r: CGFloat = 14
                             let dot = CGRect(x: pt.x - r, y: pt.y - r, width: r * 2, height: r * 2)
                             context.fill(Path(ellipseIn: dot), with: .color(Color(red: 1, green: 0, blue: 1).opacity(0.8)))
                         }
+                        */
                     }
                     .onChange(of: timeline.date) { old, new in
                         gameEngine.update(dt: max(0, min(new.timeIntervalSince(old), 0.1)))

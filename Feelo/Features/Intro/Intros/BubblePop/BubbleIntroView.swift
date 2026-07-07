@@ -68,7 +68,7 @@ struct BubbleIntroView: View {
         .onChange(of: viewModel.currentScene) { _, _ in
             speech.speak(viewModel.subtitle)
         }
-        .onTapGesture {
+        .onTapWithSound {
             if viewModel.advance() {
                 router.currentScreen = .action
             }
