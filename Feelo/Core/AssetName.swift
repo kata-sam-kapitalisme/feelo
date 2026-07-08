@@ -10,6 +10,7 @@ enum AssetName {
 
         static let bubble = "bubble"
         static let bubSplash = "bubSplash"
+        static let foot = "foot"
 
         static let ballFull = "ballFull"
         static let ballFlat = "ballFlat"

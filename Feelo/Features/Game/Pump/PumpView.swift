@@ -9,6 +9,7 @@ struct PumpView: View {
     @State private var engine = PumpEngine()
     @State private var showTutorial = true
     @State private var showDone = false
+    @State private var showPreparation = true
 
     var body: some View {
         GeometryReader { geo in
@@ -74,17 +75,33 @@ struct PumpView: View {
                     Spacer()
                 }
                 .zIndex(30)
+
+                if showPreparation {
+                    PreparationOverlay {
+                        withAnimation(.easeInOut(duration: 0.35)) {
+                            showPreparation = false
+                        }
+                        engine.start()
+                    }
+                    .zIndex(150)
+                    .transition(.opacity)
+                }
             }
             .onAppear {
-                Task {
-                    try? await Task.sleep(
-                        nanoseconds: AppConst.Time.tutorialNs
-                    )
+            }
+            .onChange(of: showPreparation) { _, isPrep in
+                if !isPrep {
+                    Task {
+                        try? await Task.sleep(
+                            nanoseconds: AppConst.Time.tutorialNs
+                        )
 
-                    showTutorial = false
+                        showTutorial = false
+                    }
                 }
             }
             .onChange(of: pose.points) { _, points in
+                guard !showPreparation else { return }
                 engine.updateHands(points)
             }
             .onChange(of: engine.finished) { _, isFinished in
@@ -98,6 +115,7 @@ struct PumpView: View {
             }
             #if DEBUG
             .onTapGesture {
+                guard !showPreparation else { return }
                 engine.pump()
             }
             #endif

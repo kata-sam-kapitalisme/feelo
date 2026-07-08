@@ -8,6 +8,7 @@ final class BubbleEngine {
     var score = 0
     var timeLeft: Double = 260
     var finished = false
+    var started = false
 
     private var size: CGSize = .zero
     private var color: Color = .blue
@@ -23,14 +24,19 @@ final class BubbleEngine {
 
         score = 0
         finished = false
+        started = false
         bubbles = []
 
         impact.prepare()
         spawnWave()
     }
 
+    func start() {
+        started = true
+    }
+
     func update(dt: Double) {
-        guard !finished else {
+        guard started, !finished else {
             return
         }
 
@@ -60,7 +66,7 @@ final class BubbleEngine {
     }
 
     func hit(points: [CGPoint]) {
-        guard !points.isEmpty else {
+        guard started, !finished, !points.isEmpty else {
             return
         }
 
