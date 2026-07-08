@@ -4,12 +4,6 @@ import UIKit
 struct SceneView: View {
     @Environment(AppNav.self) private var nav
 
-    private let columns = [
-        GridItem(.flexible(), spacing: 16),
-        GridItem(.flexible(), spacing: 16),
-        GridItem(.flexible(), spacing: 16)
-    ]
-
     private var items: [Scenario] {
         nav.filter?.items ?? []
     }
@@ -19,63 +13,76 @@ struct SceneView: View {
     }
 
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            Image(AssetName.Img.bgWaves)
-                .resizable()
-                .scaledToFill()
-                .ignoresSafeArea()
+        GeometryReader { geo in
+            let scale = min(1.0, min(geo.size.width / AppConst.Ref.w, geo.size.height / AppConst.Ref.h))
+            let hPad = max(16, 28 * scale)
+            let gridSpacing = max(12, 16 * scale)
+            let scaledColumns = [
+                GridItem(.flexible(), spacing: gridSpacing),
+                GridItem(.flexible(), spacing: gridSpacing),
+                GridItem(.flexible(), spacing: gridSpacing)
+            ]
 
-            VStack(alignment: .leading, spacing: 0) {
-                header
-                    .padding(.horizontal, 28)
-                    .padding(.top, 20)
-                    .padding(.bottom, 8)
+            ZStack(alignment: .topLeading) {
+                Image(AssetName.Img.bgWaves)
+                    .resizable()
+                    .scaledToFill()
+                    .ignoresSafeArea()
 
-                Text(title)
-                    .font(AppFont.semi(40))
-                    .foregroundStyle(.white)
-                    .padding(.horizontal, 28)
-                    .padding(.bottom, 18)
+                VStack(alignment: .leading, spacing: 0) {
+                    header(scale: scale)
+                        .padding(.horizontal, hPad)
+                        .padding(.top, 20 * scale)
+                        .padding(.bottom, 8 * scale)
 
-                if items.isEmpty {
-                    emptyView
-                } else {
-                    ScrollView(.vertical, showsIndicators: false) {
-                        LazyVGrid(
-                            columns: columns,
-                            spacing: 16
-                        ) {
-                            ForEach(items) { item in
-                                SceneCard(
-                                    item: item,
-                                    locked: item.locked,
-                                    done: ProgressSvc.isDone(item.id)
-                                ) {
-                                    guard !item.locked else {
-                                        return
+                    Text(title)
+                        .font(AppFont.semi(max(28, 40 * scale)))
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, hPad)
+                        .padding(.bottom, 18 * scale)
+
+                    if items.isEmpty {
+                        emptyView
+                    } else {
+                        ScrollView(.vertical, showsIndicators: false) {
+                            LazyVGrid(
+                                columns: scaledColumns,
+                                spacing: gridSpacing
+                            ) {
+                                ForEach(items) { item in
+                                    SceneCard(
+                                        item: item,
+                                        locked: item.locked,
+                                        done: ProgressSvc.isDone(item.id),
+                                        scale: scale
+                                    ) {
+                                        guard !item.locked else {
+                                            return
+                                        }
+
+                                        SoundSvc.shared.levelUp()
+                                        SoundSvc.shared.stopBGM()
+
+                                        nav.scenario = item
+                                        nav.screen = .intro
                                     }
-
-                                    SoundSvc.shared.levelUp()
-                                    SoundSvc.shared.stopBGM()
-
-                                    nav.scenario = item
-                                    nav.screen = .intro
                                 }
                             }
+                            .padding(.horizontal, hPad)
+                            .padding(.bottom, 40)
                         }
-                        .padding(.horizontal, 28)
-                        .padding(.bottom, 40)
                     }
                 }
             }
-        }
-        .onAppear {
-            SoundSvc.shared.playBGM()
+            .onAppear {
+                SoundSvc.shared.playBGM()
+            }
         }
     }
 
-    private var header: some View {
-        HStack(alignment: .center) {
+    private func header(scale: CGFloat) -> some View {
+        let circleSize = max(36, 46 * scale)
+        return HStack(alignment: .center) {
             Button {
                 SoundSvc.shared.click()
                 nav.screen = .home
@@ -84,8 +91,8 @@ struct SceneView: View {
                     Circle()
                         .fill(.white)
                         .frame(
-                            width: 46,
-                            height: 46
+                            width: circleSize,
+                            height: circleSize
                         )
                         .shadow(
                             color: .black.opacity(0.15),
@@ -96,7 +103,7 @@ struct SceneView: View {
 
                     Image(systemName: "chevron.left")
                         .font(.system(
-                            size: 18,
+                            size: 18 * scale,
                             weight: .bold
                         ))
                         .foregroundStyle(AppColor.darkText)
@@ -110,8 +117,8 @@ struct SceneView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(
-                    width: AppConst.Layout.logoW,
-                    height: AppConst.Layout.logoH
+                    width: AppConst.Layout.logoW * scale,
+                    height: AppConst.Layout.logoH * scale
                 )
         }
     }
@@ -137,6 +144,7 @@ private struct SceneCard: View {
     let item: Scenario
     let locked: Bool
     let done: Bool
+    let scale: CGFloat
     let action: () -> Void
 
     private let aspect: CGFloat = 4 / 3
@@ -168,11 +176,11 @@ private struct SceneCard: View {
                     }
 
                     label
-                        .padding(.leading, 18)
-                        .padding(.bottom, 18)
+                        .padding(.leading, 18 * scale)
+                        .padding(.bottom, 18 * scale)
 
                     if locked {
-                        LockIcon(size: 62)
+                        LockIcon(size: 62 * scale)
                             .frame(
                                 maxWidth: .infinity,
                                 maxHeight: .infinity,
@@ -182,8 +190,8 @@ private struct SceneCard: View {
 
                     if done && !locked {
                         checkIcon
-                            .padding(.top, 26)
-                            .padding(.trailing, 26)
+                            .padding(.top, 26 * scale)
+                            .padding(.trailing, 26 * scale)
                             .frame(
                                 maxWidth: .infinity,
                                 maxHeight: .infinity,
@@ -265,8 +273,8 @@ private struct SceneCard: View {
             Circle()
                 .fill(.white)
                 .frame(
-                    width: 82,
-                    height: 82
+                    width: 82 * scale,
+                    height: 82 * scale
                 )
                 .shadow(
                     color: .black.opacity(0.18),
@@ -277,7 +285,7 @@ private struct SceneCard: View {
 
             Image(systemName: "checkmark")
                 .font(.system(
-                    size: 34,
+                    size: 34 * scale,
                     weight: .black
                 ))
                 .foregroundStyle(
@@ -292,12 +300,12 @@ private struct SceneCard: View {
 
     private var label: some View {
         Text(item.title)
-            .font(AppFont.semi(22))
+            .font(AppFont.semi(22 * scale))
             .foregroundStyle(AppColor.darkText)
             .lineLimit(1)
             .multilineTextAlignment(.center)
-            .padding(.horizontal, 18)
-            .frame(height: 62)
+            .padding(.horizontal, 18 * scale)
+            .frame(height: 62 * scale)
             .background {
                 RoundedRectangle(
                     cornerRadius: 50,

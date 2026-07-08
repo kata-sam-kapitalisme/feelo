@@ -5,6 +5,7 @@ import WebKit
 struct GifView: UIViewRepresentable {
     let name: String
     var fit: String = "cover"
+    var position: String = "center center"
 
     func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
@@ -24,7 +25,20 @@ struct GifView: UIViewRepresentable {
     func updateUIView(
         _ webView: WKWebView,
         context: Context
-    ) {}
+    ) {
+        if context.coordinator.lastName != name {
+            context.coordinator.lastName = name
+            loadGif(into: webView)
+        }
+    }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator()
+    }
+
+    final class Coordinator {
+        var lastName: String = ""
+    }
 
     private func loadGif(into webView: WKWebView) {
         guard let data = gifData() else {
@@ -38,7 +52,6 @@ struct GifView: UIViewRepresentable {
         <!DOCTYPE html>
         <html>
         <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
         <style>
             * {
                 margin: 0;

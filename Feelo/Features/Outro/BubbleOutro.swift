@@ -8,48 +8,55 @@ struct BubbleOutro: View {
     private let text2 = "Kamu sangat bersemangat dan melompat dengan bahagia."
 
     var body: some View {
-        ZStack {
-            Image(AssetName.Img.bgSky)
-                .resizable()
-                .scaledToFill()
-                .ignoresSafeArea()
+        GeometryReader { geo in
+            let scale = min(1.0, min(geo.size.width / AppConst.Ref.w, geo.size.height / AppConst.Ref.h))
+            let bgH = geo.size.width * AppConst.Ref.h / AppConst.Ref.w
+            let bgOffset = -max(0, bgH - geo.size.height)
 
-            GifView(name: AssetName.Gif.bubBg)
-                .ignoresSafeArea()
+            ZStack {
+                Image(AssetName.Img.bgSky)
+                    .resizable()
+                    .frame(width: geo.size.width, height: bgH)
+                    .offset(y: bgOffset)
+                    .ignoresSafeArea()
 
-            StageSprite(
-                source: .gif,
-                name: AssetName.Gif.bub1,
-                spec: SpriteSpec(
-                    size: .squareFromHeight(AppConst.Stage.bubbleCharSmall),
-                    place: .aligned(.bottom)
-                )
-            )
+                GifView(name: AssetName.Gif.bubBg)
+                    .frame(width: geo.size.width, height: bgH)
+                    .offset(y: bgOffset)
+                    .ignoresSafeArea()
 
-            VStack {
-                Spacer()
-                    .frame(maxHeight: 40)
+                let charSize = bgH * AppConst.Stage.bubbleCharSmall
+                GifView(name: AssetName.Gif.bub1, fit: "contain")
+                    .frame(width: charSize, height: charSize)
+                    .position(x: geo.size.width / 2, y: geo.size.height - charSize / 2)
 
-                CloudBubble(
-                    title: text1,
-                    text: text2,
-                    important: true
-                )
+                VStack {
+                    Spacer()
+                        .frame(maxHeight: 40)
 
-                Spacer()
+                    CloudBubble(
+                        title: text1,
+                        text: text2,
+                        important: true,
+                        scale: scale
+                    )
 
-                TapHint()
+                    Spacer()
+
+                    TapHint()
+                }
+                .padding(32 * scale)
             }
-            .padding(32)
+            .onAppear {
+                speech.speak("\(text1) \(text2)")
+            }
+            .onDisappear {
+                speech.stop()
+            }
+            .tapSound {
+                nav.finishStory()
+            }
         }
-        .onAppear {
-            speech.speak("\(text1) \(text2)")
-        }
-        .onDisappear {
-            speech.stop()
-        }
-        .tapSound {
-            nav.finishStory()
-        }
+        .ignoresSafeArea()
     }
 }

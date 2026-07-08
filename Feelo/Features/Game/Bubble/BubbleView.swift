@@ -11,17 +11,23 @@ struct BubbleView: View {
 
     var body: some View {
         GeometryReader { geo in
+            let bgH = geo.size.width * AppConst.Ref.h / AppConst.Ref.w
+            let bgOffset = -max(0, bgH - geo.size.height)
+
             ZStack {
                 CameraView(camera: camera)
                     .ignoresSafeArea()
 
                 Image(AssetName.Img.bgSky)
                     .resizable()
-                    .scaledToFill()
+                    .frame(width: geo.size.width, height: bgH)
+                    .offset(y: bgOffset)
                     .ignoresSafeArea()
                     .opacity(0.15)
 
                 GifView(name: AssetName.Gif.bubBg)
+                    .frame(width: geo.size.width, height: bgH)
+                    .offset(y: bgOffset)
                     .ignoresSafeArea()
                     .blendMode(.screen)
 

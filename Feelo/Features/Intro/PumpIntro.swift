@@ -7,34 +7,44 @@ struct PumpIntro: View {
     @State private var speech = SpeechSvc()
 
     var body: some View {
-        ZStack {
-            Image(AssetName.Img.bgSky)
-                .resizable()
-                .scaledToFill()
-                .ignoresSafeArea()
+        GeometryReader { geo in
+            let scale = min(1.0, min(geo.size.width / AppConst.Ref.w, geo.size.height / AppConst.Ref.h))
+            let bgH = geo.size.width * AppConst.Ref.h / AppConst.Ref.w
+            let bgOffset = -max(0, bgH - geo.size.height)
 
-            GifView(name: vm.bgGif)
-                .id(vm.bgGif)
-                .ignoresSafeArea()
+            ZStack {
+                Image(AssetName.Img.bgSky)
+                    .resizable()
+                    .frame(width: geo.size.width, height: bgH)
+                    .offset(y: bgOffset)
+                    .ignoresSafeArea()
 
-            ballInBushLayer
-            characterLayer
-            textLayer
-        }
-        .onAppear {
-            speech.speak(vm.text)
-        }
-        .onChange(of: vm.step) { _, _ in
-            speech.speak(vm.text)
-        }
-        .onDisappear {
-            speech.stop()
-        }
-        .tapSound {
-            if vm.next() {
-                nav.screen = .game
+                GifView(name: vm.bgGif)
+                    .id(vm.bgGif)
+                    .frame(width: geo.size.width, height: bgH)
+                    .offset(y: bgOffset)
+                    .ignoresSafeArea()
+
+                ballInBushLayer
+                characterLayer(bgH: bgH, screenSize: geo.size)
+                textLayer(scale: scale)
+            }
+            .onAppear {
+                speech.speak(vm.text)
+            }
+            .onChange(of: vm.step) { _, _ in
+                speech.speak(vm.text)
+            }
+            .onDisappear {
+                speech.stop()
+            }
+            .tapSound {
+                if vm.next() {
+                    nav.screen = .game
+                }
             }
         }
+        .ignoresSafeArea()
     }
 
     @ViewBuilder
@@ -54,45 +64,25 @@ struct PumpIntro: View {
         }
     }
 
-    private var characterLayer: some View {
+    private func characterLayer(bgH: CGFloat, screenSize: CGSize) -> some View {
         let isAction = vm.charGif == AssetName.Gif.pump3
+        let charSize = bgH * (isAction ? AppConst.Stage.pumpCharAction : AppConst.Stage.pumpCharSmall)
+        let yOffset = isAction ? AppConst.Stage.pumpCharActionY : 0.0
+        let x = vm.step == .two
+            ? AppConst.Stage.pumpSceneTwoLead + charSize / 2
+            : screenSize.width / 2
 
-        let ratio = isAction
-            ? AppConst.Stage.pumpCharAction
-            : AppConst.Stage.pumpCharSmall
-
-        let y = isAction
-            ? AppConst.Stage.pumpCharActionY
-            : 0
-
-        let alignment: Alignment = vm.step == .two
-            ? .bottomLeading
-            : .bottom
-
-        let leading = vm.step == .two
-            ? AppConst.Stage.pumpSceneTwoLead
-            : 0
-
-        return StageSprite(
-            source: .gif,
-            name: vm.charGif,
-            spec: SpriteSpec(
-                size: .squareFromHeight(ratio),
-                place: .aligned(
-                    alignment,
-                    leading: leading,
-                    y: y
-                )
-            )
-        )
+        return GifView(name: vm.charGif, fit: "contain")
+            .frame(width: charSize, height: charSize)
+            .position(x: x, y: screenSize.height - charSize / 2 + yOffset)
     }
 
-    private var textLayer: some View {
+    private func textLayer(scale: CGFloat) -> some View {
         VStack {
             Spacer()
                 .frame(maxHeight: 40)
 
-            CloudBubble(text: vm.text)
+            CloudBubble(text: vm.text, scale: scale)
                 .animation(
                     .easeInOut(duration: 0.3),
                     value: vm.step
@@ -102,6 +92,6 @@ struct PumpIntro: View {
 
             TapHint()
         }
-        .padding(32)
+        .padding(32 * scale)
     }
 }

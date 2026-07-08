@@ -7,78 +7,78 @@ struct BubbleIntro: View {
     @State private var speech = SpeechSvc()
 
     var body: some View {
-        ZStack {
-            Image(AssetName.Img.bgSky)
-                .resizable()
-                .scaledToFill()
-                .ignoresSafeArea()
+        GeometryReader { geo in
+            let scale = min(1.0, min(geo.size.width / AppConst.Ref.w, geo.size.height / AppConst.Ref.h))
+            let bgH = geo.size.width * AppConst.Ref.h / AppConst.Ref.w
+            let bgOffset = -max(0, bgH - geo.size.height)
 
-            GifView(name: AssetName.Gif.bubBg)
-                .ignoresSafeArea()
+            ZStack {
+                Image(AssetName.Img.bgSky)
+                    .resizable()
+                    .frame(width: geo.size.width, height: bgH)
+                    .offset(y: bgOffset)
+                    .ignoresSafeArea()
 
-            characterLayer
+                GifView(name: AssetName.Gif.bubBg)
+                    .frame(width: geo.size.width, height: bgH)
+                    .offset(y: bgOffset)
+                    .ignoresSafeArea()
 
-            if vm.step == .four {
-                StageSprite(
-                    source: .gif,
-                    name: AssetName.Gif.bubItems,
-                    spec: SpriteSpec(
-                        size: .squareFromHeight(AppConst.Stage.bubbleItems),
-                        place: .aligned(.center)
+                characterLayer(bgH: bgH, bgOffset: bgOffset, screenSize: geo.size)
+
+                if vm.step == .four {
+                    StageSprite(
+                        source: .gif,
+                        name: AssetName.Gif.bubItems,
+                        spec: SpriteSpec(
+                            size: .squareFromHeight(AppConst.Stage.bubbleItems),
+                            place: .aligned(.center)
+                        )
                     )
-                )
-            }
+                }
 
-            textLayer
-        }
-        .onAppear {
-            speech.speak(vm.text)
-        }
-        .onChange(of: vm.step) { _, _ in
-            speech.speak(vm.text)
-        }
-        .onDisappear {
-            speech.stop()
-        }
-        .tapSound {
-            if vm.next() {
-                nav.screen = .game
+                textLayer(scale: scale)
+            }
+            .onAppear {
+                speech.speak(vm.text)
+            }
+            .onChange(of: vm.step) { _, _ in
+                speech.speak(vm.text)
+            }
+            .onDisappear {
+                speech.stop()
+            }
+            .tapSound {
+                if vm.next() {
+                    nav.screen = .game
+                }
             }
         }
+        .ignoresSafeArea()
     }
 
     @ViewBuilder
-    private var characterLayer: some View {
+    private func characterLayer(bgH: CGFloat, bgOffset: CGFloat, screenSize: CGSize) -> some View {
         if vm.gif == AssetName.Gif.bubTut {
-            StageSprite(
-                source: .gif,
-                name: vm.gif,
-                spec: SpriteSpec(
-                    size: .squareFromHeight(AppConst.Stage.bubbleTut),
-                    place: .aligned(
-                        .bottom,
-                        y: AppConst.Stage.bubbleTutY
-                    )
-                )
-            )
+            let tutW = screenSize.width * 0.85
+            let tutH = bgH * 0.85
+            GifView(name: vm.gif)
+                .frame(width: tutW, height: tutH)
+                .position(x: screenSize.width / 2, y: screenSize.height - tutH / 2)
         } else {
-            StageSprite(
-                source: .gif,
-                name: vm.gif,
-                spec: SpriteSpec(
-                    size: .squareFromHeight(AppConst.Stage.bubbleCharSmall),
-                    place: .aligned(.bottom)
-                )
-            )
+            let charSize = bgH * AppConst.Stage.bubbleCharSmall
+            GifView(name: vm.gif, fit: "contain")
+                .frame(width: charSize, height: charSize)
+                .position(x: screenSize.width / 2, y: screenSize.height - charSize / 2)
         }
     }
 
-    private var textLayer: some View {
+    private func textLayer(scale: CGFloat) -> some View {
         VStack {
             Spacer()
                 .frame(maxHeight: 40)
 
-            CloudBubble(text: vm.text)
+            CloudBubble(text: vm.text, scale: scale)
                 .animation(
                     .easeInOut(duration: 0.3),
                     value: vm.step
@@ -88,6 +88,6 @@ struct BubbleIntro: View {
 
             TapHint()
         }
-        .padding(32)
+        .padding(32 * scale)
     }
 }
