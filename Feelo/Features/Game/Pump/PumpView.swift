@@ -25,6 +25,8 @@ struct PumpView: View {
                 GifView(name: AssetName.Gif.bubBg)
                     .ignoresSafeArea()
                     .blendMode(.screen)
+                
+                guideLines(geo)
 
                 pumpImage(geo)
                 ballImage(geo)
@@ -257,6 +259,38 @@ struct PumpView: View {
             maxWidth: .infinity,
             maxHeight: .infinity,
             alignment: .top
+        )
+    }
+    
+    private func guideLines(_ geo: GeometryProxy) -> some View {
+        ZStack {
+            dashedLine(
+                y: geo.size.height * AppConst.Game.handUpY,
+                width: geo.size.width
+            )
+
+            dashedLine(
+                y: geo.size.height * AppConst.Game.handDownY,
+                width: geo.size.width
+            )
+        }
+        .allowsHitTesting(false)
+    }
+
+    private func dashedLine(
+        y: CGFloat,
+        width: CGFloat
+    ) -> some View {
+        Path { path in
+            path.move(to: CGPoint(x: 0, y: y))
+            path.addLine(to: CGPoint(x: width, y: y))
+        }
+        .stroke(
+            Color.white.opacity(0.9),
+            style: StrokeStyle(
+                lineWidth: 4,
+                dash: [12, 8]
+            )
         )
     }
 

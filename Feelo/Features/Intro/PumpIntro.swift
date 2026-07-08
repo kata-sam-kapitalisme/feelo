@@ -4,7 +4,6 @@ struct PumpIntro: View {
     @Environment(AppNav.self) private var nav
 
     @State private var vm = PumpIntroVM()
-    @State private var speech = SpeechSvc()
 
     var body: some View {
         ZStack {
@@ -22,13 +21,14 @@ struct PumpIntro: View {
             textLayer
         }
         .onAppear {
-            speech.speak(vm.text)
+            SoundSvc.shared.playAmbient()
+            SoundSvc.shared.playVoice(vm.voice)
         }
         .onChange(of: vm.step) { _, _ in
-            speech.speak(vm.text)
+            SoundSvc.shared.playVoice(vm.voice)
         }
         .onDisappear {
-            speech.stop()
+            SoundSvc.shared.stopVoice()
         }
         .tapSound {
             if vm.next() {
