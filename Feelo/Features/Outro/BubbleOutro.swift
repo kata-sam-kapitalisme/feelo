@@ -37,10 +37,22 @@ struct BubbleOutro: View {
                 )
 
                 Spacer()
-
-                TapHint()
             }
             .padding(32)
+            
+            VStack {
+                Spacer()
+                
+                HStack {
+                    Spacer()
+                    
+                    NextButton {
+                        nav.finishStory()
+                    }
+                }
+                .padding(.trailing, 32)
+                .padding(.bottom, 32)
+            }
         }
         .onAppear {
             speech.speak("\(text1) \(text2)")
@@ -48,8 +60,10 @@ struct BubbleOutro: View {
         .onDisappear {
             speech.stop()
         }
-        .tapSound {
-            nav.finishStory()
-        }
     }
+}
+
+#Preview(traits: .landscapeLeft) {
+    BubbleOutro()
+        .environment(AppNav())
 }

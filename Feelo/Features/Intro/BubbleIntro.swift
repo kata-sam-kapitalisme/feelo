@@ -5,6 +5,7 @@ struct BubbleIntro: View {
 
     @State private var vm = BubbleIntroVM()
     @State private var speech = SpeechSvc()
+    @State private var tapInstruction = true
 
     var body: some View {
         ZStack {
@@ -17,7 +18,7 @@ struct BubbleIntro: View {
                 .ignoresSafeArea()
 
             characterLayer
-
+            
             if vm.step == .four {
                 StageSprite(
                     source: .gif,
@@ -28,19 +29,52 @@ struct BubbleIntro: View {
                     )
                 )
             }
-
-            textLayer
+            
+            if !tapInstruction {
+                textLayer
+            }
+            
+            if tapInstruction {
+                TapHint()
+            }
+            
+            if vm.step == .five {
+                VStack {
+                    Spacer()
+                    
+                    HStack {
+                        Spacer()
+                        
+                        NextButton {
+                            nav.screen = .game
+                        }
+                    }
+                    .padding(.trailing, 32)
+                    .padding(.bottom, 32)
+                }
+            }
         }
+        
         .onAppear {
+            guard !tapInstruction else { return }
             speech.speak(vm.text)
         }
         .onChange(of: vm.step) { _, _ in
+            guard !tapInstruction else { return }
             speech.speak(vm.text)
         }
         .onDisappear {
             speech.stop()
         }
         .tapSound {
+            if tapInstruction {
+                tapInstruction = false
+                speech.speak(vm.text)
+                return
+            }
+            
+            guard vm.step != .five else { return }
+            
             if vm.next() {
                 nav.screen = .game
             }
@@ -85,9 +119,13 @@ struct BubbleIntro: View {
                 )
 
             Spacer()
-
-            TapHint()
         }
         .padding(32)
     }
+    
+}
+
+#Preview(traits: .landscapeLeft) {
+    BubbleIntro()
+        .environment(AppNav())
 }
