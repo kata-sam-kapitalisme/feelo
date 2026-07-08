@@ -49,6 +49,21 @@ final class BubbleIntroVM {
             return "Ayo pecahkan gelembung-gelembungnya!"
         }
     }
+    
+    var voice: String {
+        switch step {
+        case .one:
+            return AssetName.Voiceover.bubble_intro_1
+        case .two:
+            return AssetName.Voiceover.bubble_intro_2
+        case .three:
+            return AssetName.Voiceover.bubble_intro_3
+        case .four:
+            return AssetName.Voiceover.bubble_intro_4
+        case .five:
+            return AssetName.Voiceover.bubble_intro_5
+        }
+    }
 
     func next() -> Bool {
         switch step {
@@ -140,6 +155,21 @@ final class PumpIntroVM {
 
         case .five:
             return "Yuk, Pompa Bolanya! Gerakkan tanganmu naik dan turun untuk memompa bola!"
+        }
+    }
+    
+    var voice: String {
+        switch step {
+        case .one:
+            return AssetName.Voiceover.pompa_intro_1
+        case .two:
+            return AssetName.Voiceover.pompa_intro_2
+        case .three:
+            return AssetName.Voiceover.pompa_intro_3
+        case .four:
+            return AssetName.Voiceover.pompa_intro_4
+        case .five:
+            return AssetName.Voiceover.pompa_intro_5
         }
     }
 

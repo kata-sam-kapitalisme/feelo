@@ -4,7 +4,7 @@ struct BubbleIntro: View {
     @Environment(AppNav.self) private var nav
 
     @State private var vm = BubbleIntroVM()
-    @State private var speech = SpeechSvc()
+    @State private var tapInstruction = true
 
     var body: some View {
         GeometryReader { geo in
@@ -37,21 +37,54 @@ struct BubbleIntro: View {
                     )
                 }
 
-                textLayer(scale: scale)
-            }
-            .onAppear {
-                speech.speak(vm.text)
-            }
-            .onChange(of: vm.step) { _, _ in
-                speech.speak(vm.text)
-            }
-            .onDisappear {
-                speech.stop()
-            }
-            .tapSound {
-                if vm.next() {
-                    nav.screen = .game
+                if !tapInstruction {
+                    textLayer(scale: scale)
                 }
+            
+            if tapInstruction {
+                TapHint()
+            }
+            
+            if vm.step == .five {
+                VStack {
+                    Spacer()
+                    
+                    HStack {
+                        Spacer()
+                        
+                        NextButton {
+                            nav.screen = .game
+                        }
+                    }
+                    .padding(.trailing, 32)
+                    .padding(.bottom, 32)
+                }
+            }
+        }
+        
+        .onAppear {
+            SoundSvc.shared.playAmbient()
+            guard !tapInstruction else { return }
+            SoundSvc.shared.playVoice(vm.voice)
+        }
+        .onChange(of: vm.step) { _, _ in
+            guard !tapInstruction else { return }
+            SoundSvc.shared.playVoice(vm.voice)
+        }
+        .onDisappear {
+            SoundSvc.shared.stopVoice()
+        }
+        .tapSound {
+            if tapInstruction {
+                tapInstruction = false
+                SoundSvc.shared.playVoice(vm.voice)
+                return
+            }
+            
+            guard vm.step != .five else { return }
+            
+            if vm.next() {
+                nav.screen = .game
             }
         }
         .ignoresSafeArea()
@@ -85,9 +118,13 @@ struct BubbleIntro: View {
                 )
 
             Spacer()
-
-            TapHint()
         }
         .padding(32 * scale)
     }
+    
+}
+
+#Preview(traits: .landscapeLeft) {
+    BubbleIntro()
+        .environment(AppNav())
 }

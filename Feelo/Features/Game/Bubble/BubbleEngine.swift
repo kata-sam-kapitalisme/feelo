@@ -92,6 +92,7 @@ final class BubbleEngine {
                     bubbles[index].popped = true
                     bubbles[index].poppedAt = Date()
                     score += 1
+                    SoundSvc.shared.bubblePop()
                     didHit = true
                     break
                 }

@@ -2,8 +2,7 @@ import SwiftUI
 
 struct BubbleOutro: View {
     @Environment(AppNav.self) private var nav
-    @State private var speech = SpeechSvc()
-
+    
     private let text1 = "Kamu berhasil memecahkan semua gelembung!"
     private let text2 = "Kamu sangat bersemangat dan melompat dengan bahagia."
 
@@ -42,21 +41,36 @@ struct BubbleOutro: View {
                     )
 
                     Spacer()
-
-                    TapHint()
                 }
                 .padding(32 * scale)
+
+                VStack {
+                    Spacer()
+
+                    HStack {
+                        Spacer()
+
+                        NextButton {
+                            nav.finishStory()
+                        }
+                    }
+                    .padding(.trailing, 32)
+                    .padding(.bottom, 32)
+                }
             }
             .onAppear {
-                speech.speak("\(text1) \(text2)")
+                SoundSvc.shared.playAmbient()
+                SoundSvc.shared.playVoice(AssetName.Voiceover.bubble_outro)
             }
             .onDisappear {
-                speech.stop()
-            }
-            .tapSound {
-                nav.finishStory()
+                SoundSvc.shared.stopVoice()
             }
         }
         .ignoresSafeArea()
     }
+}
+
+#Preview(traits: .landscapeLeft) {
+    BubbleOutro()
+        .environment(AppNav())
 }

@@ -2,7 +2,6 @@ import SwiftUI
 
 struct PumpOutro: View {
     @Environment(AppNav.self) private var nav
-    @State private var speech = SpeechSvc()
 
     private let text1 = "Kamu berhasil mengisi bolanya lagi!"
     private let text2 = "Sekarang, kamu bisa bermain bersama lagi."
@@ -42,21 +41,36 @@ struct PumpOutro: View {
                     )
 
                     Spacer()
-
-                    TapHint()
                 }
                 .padding(32 * scale)
+
+                VStack {
+                    Spacer()
+
+                    HStack {
+                        Spacer()
+
+                        NextButton {
+                            nav.finishStory()
+                        }
+                    }
+                    .padding(.trailing, 32)
+                    .padding(.bottom, 32)
+                }
             }
             .onAppear {
-                speech.speak("\(text1) \(text2)")
+                SoundSvc.shared.playAmbient()
+                SoundSvc.shared.playVoice(AssetName.Voiceover.pompa_outro)
             }
             .onDisappear {
-                speech.stop()
-            }
-            .tapSound {
-                nav.finishStory()
+                SoundSvc.shared.stopVoice()
             }
         }
         .ignoresSafeArea()
     }
+}
+
+#Preview(traits: .landscapeLeft) {
+    PumpOutro()
+        .environment(AppNav())
 }
