@@ -36,10 +36,22 @@ struct PumpOutro: View {
                 )
 
                 Spacer()
-
-                TapHint()
             }
             .padding(32)
+            
+            VStack {
+                Spacer()
+                
+                HStack {
+                    Spacer()
+                    
+                    NextButton {
+                        nav.finishStory()
+                    }
+                }
+                .padding(.trailing, 32)
+                .padding(.bottom, 32)
+            }
         }
         .onAppear {
             SoundSvc.shared.playAmbient()
@@ -48,8 +60,10 @@ struct PumpOutro: View {
         .onDisappear {
             SoundSvc.shared.stopVoice()
         }
-        .tapSound {
-            nav.finishStory()
-        }
     }
+}
+
+#Preview(traits: .landscapeLeft) {
+    PumpOutro()
+        .environment(AppNav())
 }
