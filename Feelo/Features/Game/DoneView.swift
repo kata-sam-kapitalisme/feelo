@@ -80,9 +80,9 @@ struct DoneView: View {
                 .padding(.horizontal, 40)
             }
         }
-        .onAppear {
-            ProgressSvc.markDone(item.id)
-        }
+//        .onAppear {
+//            ProgressSvc.markDone(item.id)
+//        }
         .ignoresSafeArea()
     }
 }
