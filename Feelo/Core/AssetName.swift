@@ -7,6 +7,7 @@ enum AssetName {
         static let unionTag = "unionTag"
         static let badge = "badge"
         static let lockPic = "lockPic"
+        static let nextButton = "nextButton"
 
         static let bubble = "bubble"
         static let bubSplash = "bubSplash"
@@ -51,6 +52,8 @@ enum AssetName {
         static let pump4 = "pump4"
         static let pump5 = "pump5"
         static let pumpTut = "pumpTut"
+        
+        static let tapNext = "tapNext"
     }
 
     enum Sound {
