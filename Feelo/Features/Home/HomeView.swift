@@ -1,152 +1,270 @@
 import SwiftUI
 
-// MARK: - HomeView
-
 struct HomeView: View {
-    @Environment(Router.self) private var router
-    @State private var viewModel = HomeViewModel()
+    @Environment(AppNav.self) private var nav
+
+    @State private var vm = HomeVM()
     @State private var badgePressed = false
-    
+
     var body: some View {
         GeometryReader { geo in
+            let size = HomeSize.make(geo)
+
             ZStack {
-                // ── Background ──────────────────────────────────────
-                Image("bg_waves")
+                Image(AssetName.Img.bgWaves)
                     .resizable()
                     .scaledToFill()
                     .ignoresSafeArea()
-                
-                // ── Content ─────────────────────────────────────────
+
                 VStack(alignment: .leading, spacing: 0) {
-                    
-                    // Header
-                    homeHeader
-                        .padding(.horizontal, hPad(geo))
-                        .padding(.top, geo.safeAreaInsets.top + 10)
-                        .padding(.bottom, geo.size.height * 0.025)
-                    
-                    // Section: Cerita untukmu
-                    sectionTitle("Cerita untukmu")
-                        .padding(.horizontal, hPad(geo))
-                        .padding(.bottom, 12)
-                    
-                    placesCarousel(geo: geo)
-                    
+                    header(size)
+                        .padding(.horizontal, size.sidePad)
+                        .padding(.top, geo.safeAreaInsets.top + 8)
+                        .padding(.bottom, size.headerBottom)
+
+                    sectionTitle(
+                        "Cerita untukmu",
+                        fontSize: size.titleFont
+                    )
+                    .padding(.horizontal, size.sidePad)
+                    .padding(.bottom, AppConst.Home.titleBottom)
+
+                    placeList(size)
+                        .frame(height: size.placeTotalH)
+
                     Spacer(minLength: 0)
-                    
-                    // Section: Macam-macam emosi
-                    sectionTitle("Macam-macam emosi")
-                        .padding(.horizontal, hPad(geo))
-                        .padding(.bottom, 12)
-                    
-                    emotionsCarousel(geo: geo)
-                    
-                    Spacer(minLength: geo.safeAreaInsets.bottom + 16)
+
+                    sectionTitle(
+                        "Macam-macam emosi",
+                        fontSize: size.titleFont
+                    )
+                    .padding(.horizontal, size.sidePad)
+                    .padding(.bottom, AppConst.Home.titleBottom)
+
+                    emotionList(size)
+                        .frame(height: size.emotionTotalH)
+
+                    Spacer(minLength: geo.safeAreaInsets.bottom + 8)
                 }
             }
         }
         .ignoresSafeArea(edges: .bottom)
         .onAppear {
-            SoundManager.shared.playBGM()
+            SoundSvc.shared.playBGM()
         }
     }
-    
-    // MARK: - Responsive helpers
-    
-    private func hPad(_ geo: GeometryProxy) -> CGFloat {
-        max(20, geo.size.width * 0.03)
-    }
-    
-    // MARK: - Header
-    
-    private var homeHeader: some View {
+
+    private func header(_ size: HomeSize) -> some View {
         HStack(alignment: .center) {
-            Image("logo")
+            Image(AssetName.Img.logo)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 250, height: 109.81068420410156)
-            
+                .frame(
+                    width: size.logoW,
+                    height: size.logoH
+                )
+
             Spacer()
-            
+
             Button {
-                SoundManager.shared.playClick()
-                withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) { badgePressed = true }
+                SoundSvc.shared.click()
+
+                withAnimation(.spring(
+                    response: 0.3,
+                    dampingFraction: 0.5
+                )) {
+                    badgePressed = true
+                }
+
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                     badgePressed = false
-                    router.currentScreen = .badge
+                    nav.screen = .sticker
                 }
             } label: {
                 ZStack {
                     Circle()
-                        .fill(Color.white)
-                        .frame(width: 80, height: 80)
-                        .shadow(color: .black.opacity(0.25), radius: 6, y: 3)
-                    Image("badge")
+                        .fill(.white)
+                        .frame(
+                            width: size.badge,
+                            height: size.badge
+                        )
+                        .shadow(
+                            color: .black.opacity(0.25),
+                            radius: 6,
+                            x: 0,
+                            y: 3
+                        )
+
+                    Image(AssetName.Img.badge)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 48, height: 48)
+                        .frame(
+                            width: size.badge * 0.60,
+                            height: size.badge * 0.60
+                        )
                 }
             }
             .buttonStyle(.plain)
             .scaleEffect(badgePressed ? 0.88 : 1.0)
         }
     }
-    
-    // MARK: - Section Title
-    
-    private func sectionTitle(_ text: String) -> some View {
-        let fredokaLoaded = UIFont(name: "FredokaLight-Bold", size: 40) != nil
-        return Text(text)
-            .font(fredokaLoaded
-                  ? .custom("FredokaLight-Bold", size: 40)
-                  : .system(size: 40, weight: .bold, design: .rounded))
+
+    private func sectionTitle(
+        _ text: String,
+        fontSize: CGFloat
+    ) -> some View {
+        Text(text)
+            .font(AppFont.bold(fontSize))
             .foregroundStyle(.white)
             .lineSpacing(0)
             .tracking(0)
     }
-    
-    // MARK: - Places Carousel
-    
-    @ViewBuilder
-    private func placesCarousel(geo: GeometryProxy) -> some View {
-        // Card width = ~35% of screen width; height = 3/4 of that (landscape 4:3)
-        let cardW = geo.size.width * 0.33
-        let cardH = cardW * 0.832   // Figma canvas: (61.27 + 304) / 439 = 0.832
-        
+
+    private func placeList(_ size: HomeSize) -> some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 16) {
-                ForEach(viewModel.places) { place in
+            HStack(spacing: AppConst.Home.itemGap) {
+                ForEach(vm.places) { place in
                     PlaceCard(place: place) {
-                        router.sceneFilter = .place(place.title)
-                        router.currentScreen = .sceneSelect
+                        nav.filter = .place(place.title)
+                        nav.screen = .scene
                     }
-                    .frame(width: cardW, height: cardH)
-                    .padding(.bottom, cardH * 0.25)   // room for proportional label overflow
+                    .frame(
+                        width: size.placeW,
+                        height: size.placeH
+                    )
+                    .padding(.bottom, size.placeBottom)
                 }
             }
-            .padding(.horizontal, hPad(geo))
+            .padding(.horizontal, size.sidePad)
         }
     }
-    
-    
-    // MARK: - Emotions Carousel
-    
-    @ViewBuilder
-    private func emotionsCarousel(geo: GeometryProxy) -> some View {
-        let circleSize: CGFloat = 200
-        
+
+    private func emotionList(_ size: HomeSize) -> some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 20) {
-                ForEach(viewModel.emotions) { emotion in
+            HStack(spacing: AppConst.Home.emotionGap) {
+                ForEach(vm.emotions) { emotion in
                     EmotionCard(emotion: emotion) {
-                        router.sceneFilter = .emotion(emotion.title)
-                        router.currentScreen = .sceneSelect
+                        nav.filter = .emotion(emotion.title)
+                        nav.screen = .scene
                     }
-                    .frame(width: circleSize, height: circleSize)
-                    .padding(.bottom, circleSize * 0.22)   // room for pill overflow
+                    .frame(
+                        width: size.emotion,
+                        height: size.emotion
+                    )
+                    .padding(.bottom, size.emotionBottom)
                 }
             }
-            .padding(.horizontal, hPad(geo))
+            .padding(.horizontal, size.sidePad)
         }
+    }
+}
+
+private struct HomeSize {
+    let sidePad: CGFloat
+
+    let logoW: CGFloat
+    let logoH: CGFloat
+    let badge: CGFloat
+    let headerBottom: CGFloat
+
+    let titleFont: CGFloat
+
+    let placeW: CGFloat
+    let placeH: CGFloat
+    let placeBottom: CGFloat
+    let placeTotalH: CGFloat
+
+    let emotion: CGFloat
+    let emotionBottom: CGFloat
+    let emotionTotalH: CGFloat
+
+    static func make(_ geo: GeometryProxy) -> HomeSize {
+        let screen = geo.size
+        let sidePad = max(
+            AppConst.Home.minSidePad,
+            screen.width * AppConst.Home.sidePadRatio
+        )
+
+        let logoW = min(
+            AppConst.Home.maxLogoW,
+            screen.width * AppConst.Home.logoScreenWRatio,
+            screen.height * AppConst.Home.logoScreenHRatio
+        )
+
+        let logoH = logoW * AppConst.Home.logoRatio
+
+        let badge = min(
+            AppConst.Home.maxBadge,
+            logoH * AppConst.Home.badgeLogoRatio
+        )
+
+        let headerBottom = screen.height * 0.018
+
+        let titleFont = max(
+            AppConst.Home.minTitle,
+            min(
+                AppConst.Home.maxTitle,
+                screen.height * 0.055
+            )
+        )
+
+        let fixedHeight =
+            geo.safeAreaInsets.top +
+            geo.safeAreaInsets.bottom +
+            8 +
+            logoH +
+            headerBottom +
+            ((titleFont * 1.18) + AppConst.Home.titleBottom) * 2 +
+            16
+
+        let available = max(
+            280,
+            screen.height - fixedHeight
+        )
+
+        let maxPlaceW = screen.width * AppConst.Home.placeWidthRatio
+        let maxPlaceH = maxPlaceW * AppConst.Home.placeAspect
+
+        let placeSpace = available * AppConst.Home.placeSpaceRatio
+        let placeH = min(
+            maxPlaceH,
+            placeSpace / (1 + AppConst.Home.placeBottomRatio)
+        )
+
+        let placeW = placeH / AppConst.Home.placeAspect
+        let placeBottom = placeH * AppConst.Home.placeBottomRatio
+        let placeTotalH = placeH + placeBottom
+
+        let remaining = max(
+            120,
+            available - placeTotalH
+        )
+
+        let emotion = min(
+            AppConst.Home.maxEmotion,
+            max(
+                AppConst.Home.minEmotion,
+                remaining / (1 + AppConst.Home.emotionBottomRatio)
+            )
+        )
+
+        let emotionBottom = emotion * AppConst.Home.emotionBottomRatio
+        let emotionTotalH = emotion + emotionBottom
+
+        return HomeSize(
+            sidePad: sidePad,
+            logoW: logoW,
+            logoH: logoH,
+            badge: badge,
+            headerBottom: headerBottom,
+            titleFont: titleFont,
+            placeW: placeW,
+            placeH: placeH,
+            placeBottom: placeBottom,
+            placeTotalH: placeTotalH,
+            emotion: emotion,
+            emotionBottom: emotionBottom,
+            emotionTotalH: emotionTotalH
+        )
     }
 }

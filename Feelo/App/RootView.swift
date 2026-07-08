@@ -1,23 +1,29 @@
 import SwiftUI
 
 struct RootView: View {
-    @Environment(Router.self) private var router
+    @Environment(AppNav.self) private var nav
 
     var body: some View {
-        switch router.currentScreen {
+        switch nav.screen {
         case .home:
             HomeView()
-        case .sceneSelect:
-            SceneSelectView()
+
+        case .scene:
+            SceneView()
+
         case .intro:
             IntroView()
-        case .action:
-            ActionView()
+
+        case .game:
+            GameView()
+
         case .outro:
             OutroView()
-        case .completion:
-            CompletionView()
-        case .badge:
+
+        case .done:
+            DoneView()
+
+        case .sticker:
             StickerView()
         }
     }

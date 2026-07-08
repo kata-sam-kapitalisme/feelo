@@ -2,7 +2,7 @@ import SwiftUI
 
 @main
 struct FeeloApp: App {
-    @State private var router = Router()
+    @State private var nav = AppNav()
 
     init() {
         AppFont.register()
@@ -11,7 +11,7 @@ struct FeeloApp: App {
     var body: some Scene {
         WindowGroup {
             RootView()
-                .environment(router)
+                .environment(nav)
         }
     }
 }
