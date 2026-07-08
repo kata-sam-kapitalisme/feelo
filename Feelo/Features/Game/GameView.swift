@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct OutroView: View {
+struct GameView: View {
     @Environment(AppNav.self) private var nav
 
     var body: some View {
@@ -8,10 +8,10 @@ struct OutroView: View {
 
         switch item.kind {
         case .bubble:
-            BubbleOutro()
+            BubbleView()
 
         case .pump:
-            PumpOutro()
+            PumpView()
         }
     }
 }

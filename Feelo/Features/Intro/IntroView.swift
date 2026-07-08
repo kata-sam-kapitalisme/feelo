@@ -1,15 +1,17 @@
 import SwiftUI
 
 struct IntroView: View {
-    @Environment(Router.self) private var router
+    @Environment(AppNav.self) private var nav
 
     var body: some View {
-        let scenario = router.selectedScenario ?? ScenarioRepository.defaultScenario
-        switch scenario.gameType {
-        case .bubblePop:
-            BubbleIntroView()
-        case .pumpBall:
-            PumpBallIntroView()
+        let item = nav.scenario ?? ScenarioRepo.first
+
+        switch item.kind {
+        case .bubble:
+            BubbleIntro()
+
+        case .pump:
+            PumpIntro()
         }
     }
 }
