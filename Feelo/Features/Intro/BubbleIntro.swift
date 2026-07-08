@@ -4,7 +4,6 @@ struct BubbleIntro: View {
     @Environment(AppNav.self) private var nav
 
     @State private var vm = BubbleIntroVM()
-    @State private var speech = SpeechSvc()
     @State private var tapInstruction = true
 
     var body: some View {
@@ -56,20 +55,21 @@ struct BubbleIntro: View {
         }
         
         .onAppear {
+            SoundSvc.shared.playAmbient()
             guard !tapInstruction else { return }
-            speech.speak(vm.text)
+            SoundSvc.shared.playVoice(vm.voice)
         }
         .onChange(of: vm.step) { _, _ in
             guard !tapInstruction else { return }
-            speech.speak(vm.text)
+            SoundSvc.shared.playVoice(vm.voice)
         }
         .onDisappear {
-            speech.stop()
+            SoundSvc.shared.stopVoice()
         }
         .tapSound {
             if tapInstruction {
                 tapInstruction = false
-                speech.speak(vm.text)
+                SoundSvc.shared.playVoice(vm.voice)
                 return
             }
             

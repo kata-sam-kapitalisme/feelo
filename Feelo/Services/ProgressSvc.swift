@@ -25,3 +25,5 @@ enum ProgressSvc {
         Set(UserDefaults.standard.stringArray(forKey: key) ?? [])
     }
 }
+
+// cleared_level_ids: [pecahkan-gelembung]

@@ -61,5 +61,24 @@ enum AssetName {
         static let click = "click"
         static let confetti = "confetti"
         static let levelup = "levelup"
+        static let ambient = "ambient"
+        static let bubble_pop = "bubble_pop"
+        static let pump_up = "pump_up"
+        static let pump_down = "pump_down"
+    }
+    
+    enum Voiceover {
+        static let bubble_intro_1 = "bubble_intro_1"
+        static let bubble_intro_2 = "bubble_intro_2"
+        static let bubble_intro_3 = "bubble_intro_3"
+        static let bubble_intro_4 = "bubble_intro_4"
+        static let bubble_intro_5 = "bubble_intro_5"
+        static let bubble_outro = "bubble_outro"
+        static let pompa_intro_1 = "pompa_intro_1"
+        static let pompa_intro_2 = "pompa_intro_2"
+        static let pompa_intro_3 = "pompa_intro_3"
+        static let pompa_intro_4 = "pompa_intro_4"
+        static let pompa_intro_5 = "pompa_intro_5"
+        static let pompa_outro = "pompa_outro"
     }
 }
