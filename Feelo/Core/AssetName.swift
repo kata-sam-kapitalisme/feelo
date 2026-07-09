@@ -12,6 +12,12 @@ enum AssetName {
         static let bubble = "bubble"
         static let bubSplash = "bubSplash"
         static let foot = "foot"
+        static let bersemangat = "bersemangat"
+        static let semangatCard = "semangatCard"
+        static let unionTagBubble = "unionTagBubble"
+        static let kecewa = "kecewa"
+        static let kecewaOutro = "kecewaOutro"
+        static let semangatOutro = "semangatOutro"
 
         static let ballFull = "ballFull"
         static let ballFlat = "ballFlat"

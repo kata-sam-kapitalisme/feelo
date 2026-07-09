@@ -2,7 +2,6 @@ import SwiftUI
 
 struct HomeView: View {
     @Environment(AppNav.self) private var nav
-    
     @State private var vm = HomeVM()
     @State private var badgePressed = false
     
@@ -166,19 +165,17 @@ struct HomeView: View {
     }
     
 }
-// seperate struct buat text nya how it works? idk :"'''
+// seperate struct buat text
 private struct ArcText: View {
     let text: String
     let radius: CGFloat
     let font: Font
     let color: Color
-    let spreadDegrees: Double   // total angular width the text should span
+    let spreadDegrees: Double   //angular width buat span text
  
     var body: some View {
         let chars = Array(text)
-        let anglePerChar = chars.count > 1
-            ? spreadDegrees / Double(chars.count - 1)
-            : 0
+        let anglePerChar = chars.count > 1 ? spreadDegrees / Double(chars.count - 1) : 0
         let start = -spreadDegrees / 2
  
         ZStack {

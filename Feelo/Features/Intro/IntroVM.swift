@@ -5,7 +5,8 @@ enum BubbleIntroStep: Equatable {
     case two
     case three
     case four
-    case five
+//    case five
+    
 }
 
 @Observable
@@ -26,8 +27,8 @@ final class BubbleIntroVM {
         case .four:
             return AssetName.Gif.bub2
 
-        case .five:
-            return AssetName.Gif.bubTut
+//        case .five:
+//            return AssetName.Gif.bubTut
         }
     }
 
@@ -45,8 +46,8 @@ final class BubbleIntroVM {
         case .four:
             return "Wah, gelembungnya banyak sekali! Kamu merasa bersemangat!"
 
-        case .five:
-            return "Ayo pecahkan gelembung-gelembungnya!"
+//        case .five:
+//            return "Ayo pecahkan gelembung-gelembungnya!"
         }
     }
     
@@ -60,8 +61,8 @@ final class BubbleIntroVM {
             return AssetName.Voiceover.bubble_intro_3
         case .four:
             return AssetName.Voiceover.bubble_intro_4
-        case .five:
-            return AssetName.Voiceover.bubble_intro_5
+//        case .five:
+//            return AssetName.Voiceover.bubble_intro_5
         }
     }
 
@@ -80,11 +81,11 @@ final class BubbleIntroVM {
             return false
 
         case .four:
-            step = .five
-            return false
-
-        case .five:
+//            step = .five
             return true
+
+//        case .five:
+//            return true
         }
     }
 }
