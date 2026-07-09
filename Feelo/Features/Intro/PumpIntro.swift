@@ -79,6 +79,7 @@ struct PumpIntro: View {
         }
         .ignoresSafeArea()
     }
+    }
 
     @ViewBuilder
     private var ballInBushLayer: some View {

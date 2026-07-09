@@ -89,6 +89,7 @@ struct BubbleIntro: View {
         }
         .ignoresSafeArea()
     }
+    }
 
     @ViewBuilder
     private func characterLayer(bgH: CGFloat, bgOffset: CGFloat, screenSize: CGSize) -> some View {
