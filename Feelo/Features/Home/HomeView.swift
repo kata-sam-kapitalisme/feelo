@@ -83,7 +83,7 @@ struct HomeView: View {
             } label: {
                 ZStack {
                     Circle()
-                        .fill(.white)
+                        .fill(AppColor.line)
                         .frame(
                             width: size.badge,
                             height: size.badge
@@ -106,7 +106,7 @@ struct HomeView: View {
                         text: "Koleksi Kamu",
                         radius: size.badge * 0.68,
                         font: AppFont.bold(size.badge * 0.25),
-                        color: AppColor.line.opacity(0.90),
+                        color: .white.opacity(0.90),
                         spreadDegrees: 180
                     )
                 }
