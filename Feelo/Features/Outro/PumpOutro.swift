@@ -7,49 +7,70 @@ struct PumpOutro: View {
     private let text2 = "Sekarang, kamu bisa bermain bersama lagi."
 
     var body: some View {
-        ZStack {
-            Image(AssetName.Img.bgSky)
-                .resizable()
-                .scaledToFill()
-                .ignoresSafeArea()
+        GeometryReader { geo in
+            let scale = min(1.0, min(geo.size.width / AppConst.Ref.w, geo.size.height / AppConst.Ref.h))
+            let bgH = max(geo.size.height, geo.size.width * AppConst.Ref.h / AppConst.Ref.w)
+            let bgOffset = -max(0, bgH - geo.size.height)
 
-            GifView(name: AssetName.Gif.pumpBg)
-                .ignoresSafeArea()
+            ZStack {
+                Image(AssetName.Img.bgSky)
+                    .resizable()
+                    .frame(width: geo.size.width, height: bgH)
+                    .offset(y: bgOffset)
+                    .ignoresSafeArea()
 
-            StageSprite(
-                source: .gif,
-                name: AssetName.Gif.pump5,
-                spec: SpriteSpec(
-                    size: .squareFromHeight(AppConst.Stage.pumpCharSmall),
-                    place: .aligned(.bottom)
-                )
-            )
+                GifView(name: AssetName.Gif.pumpBg)
+                    .frame(width: geo.size.width, height: bgH)
+                    .offset(y: bgOffset)
+                    .ignoresSafeArea()
 
-            VStack {
-                Spacer()
-                    .frame(maxHeight: 40)
+                let charSize = bgH * AppConst.Stage.pumpCharSmall
+                GifView(name: AssetName.Gif.pump5, fit: "contain")
+                    .frame(width: charSize, height: charSize)
+                    .position(x: geo.size.width / 2, y: geo.size.height - charSize / 2)
 
-                CloudBubble(
-                    title: text1,
-                    text: text2,
-                    important: true
-                )
+                VStack {
+                    Spacer()
+                        .frame(maxHeight: 40)
 
-                Spacer()
+                    CloudBubble(
+                        title: text1,
+                        text: text2,
+                        important: true,
+                        scale: scale
+                    )
 
-                TapHint()
+                    Spacer()
+                }
+                .padding(32 * scale)
+
+                VStack {
+                    Spacer()
+
+                    HStack {
+                        Spacer()
+
+                        NextButton {
+                            nav.finishStory()
+                        }
+                    }
+                    .padding(.trailing, 32)
+                    .padding(.bottom, 32)
+                }
             }
-            .padding(32)
+            .onAppear {
+                SoundSvc.shared.playAmbient()
+                SoundSvc.shared.playVoice(AssetName.Voiceover.pompa_outro)
+            }
+            .onDisappear {
+                SoundSvc.shared.stopVoice()
+            }
         }
-        .onAppear {
-            SoundSvc.shared.playAmbient()
-            SoundSvc.shared.playVoice(AssetName.Voiceover.pompa_outro)
-        }
-        .onDisappear {
-            SoundSvc.shared.stopVoice()
-        }
-        .tapSound {
-            nav.finishStory()
-        }
+        .ignoresSafeArea()
     }
+}
+
+#Preview(traits: .landscapeLeft) {
+    PumpOutro()
+        .environment(AppNav())
 }

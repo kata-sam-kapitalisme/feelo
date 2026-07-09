@@ -1,6 +1,11 @@
 import SwiftUI
 
 enum AppConst {
+    enum Ref {
+        static let w: CGFloat = 1376   // 13" iPad landscape width
+        static let h: CGFloat = 1032   // 13" iPad landscape height
+    }
+
     enum Time {
         static let tutorialNs: UInt64 = 7_000_000_000
         static let splashDur: TimeInterval = 0.35
@@ -54,7 +59,7 @@ enum AppConst {
         static let placeSpaceRatio: CGFloat = 0.58
 
         static let maxEmotion: CGFloat = 200
-        static let minEmotion: CGFloat = 130
+        static let minEmotion: CGFloat = 80
         static let emotionBottomRatio: CGFloat = 0.22
 
         static let titleBottom: CGFloat = 12

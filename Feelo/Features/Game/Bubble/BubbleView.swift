@@ -8,20 +8,27 @@ struct BubbleView: View {
     @State private var pose = PoseSvc()
     @State private var engine = BubbleEngine()
     @State private var showTutorial = true
+    @State private var showPreparation = true
 
     var body: some View {
         GeometryReader { geo in
+            let bgH = geo.size.width * AppConst.Ref.h / AppConst.Ref.w
+            let bgOffset = -max(0, bgH - geo.size.height)
+
             ZStack {
                 CameraView(camera: camera)
                     .ignoresSafeArea()
 
                 Image(AssetName.Img.bgSky)
                     .resizable()
-                    .scaledToFill()
+                    .frame(width: geo.size.width, height: bgH)
+                    .offset(y: bgOffset)
                     .ignoresSafeArea()
                     .opacity(0.15)
 
                 GifView(name: AssetName.Gif.bubBg)
+                    .frame(width: geo.size.width, height: bgH)
+                    .offset(y: bgOffset)
                     .ignoresSafeArea()
                     .blendMode(.screen)
 
@@ -53,6 +60,17 @@ struct BubbleView: View {
 
                     Spacer()
                 }
+
+                if showPreparation {
+                    PreparationOverlay {
+                        withAnimation(.easeInOut(duration: 0.35)) {
+                            showPreparation = false
+                        }
+                        engine.start()
+                    }
+                    .zIndex(150)
+                    .transition(.opacity)
+                }
             }
             .onAppear {
                 let item = nav.scenario ?? ScenarioRepo.first
@@ -61,13 +79,16 @@ struct BubbleView: View {
                     scenario: item,
                     size: geo.size
                 )
+            }
+            .onChange(of: showPreparation) { _, isPrep in
+                if !isPrep {
+                    Task {
+                        try? await Task.sleep(
+                            nanoseconds: AppConst.Time.tutorialNs
+                        )
 
-                Task {
-                    try? await Task.sleep(
-                        nanoseconds: AppConst.Time.tutorialNs
-                    )
-
-                    showTutorial = false
+                        showTutorial = false
+                    }
                 }
             }
             .onChange(of: geo.size) { _, newSize in
@@ -79,6 +100,7 @@ struct BubbleView: View {
             }
             #if DEBUG
             .onTapGesture { point in
+                guard !showPreparation else { return }
                 engine.debugTap(point)
             }
             #endif
@@ -155,6 +177,8 @@ struct BubbleView: View {
                 }
             }
             .onChange(of: timeline.date) { oldDate, newDate in
+                guard !showPreparation else { return }
+
                 engine.update(
                     dt: max(
                         0,

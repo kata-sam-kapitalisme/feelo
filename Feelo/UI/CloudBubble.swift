@@ -4,24 +4,29 @@ struct CloudBubble: View {
     let title: String?
     let text: String
     let important: Bool
+    let scale: CGFloat
 
     init(
         text: String,
-        important: Bool = false
+        important: Bool = false,
+        scale: CGFloat = 1.0
     ) {
         self.title = nil
         self.text = text
         self.important = important
+        self.scale = scale
     }
 
     init(
         title: String,
         text: String,
-        important: Bool = true
+        important: Bool = true,
+        scale: CGFloat = 1.0
     ) {
         self.title = title
         self.text = text
         self.important = important
+        self.scale = scale
     }
 
     var body: some View {
@@ -30,23 +35,23 @@ struct CloudBubble: View {
                 Text(title)
                     .font(
                         important
-                        ? AppFont.bold(33)
-                        : AppFont.semi(33)
+                        ? AppFont.bold(33 * scale)
+                        : AppFont.semi(33 * scale)
                     )
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.black)
             }
 
             Text(text)
-                .font(AppFont.semi(33))
+                .font(AppFont.semi(33 * scale))
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.black)
         }
-        .padding(.horizontal, 48)
-        .padding(.vertical, 24)
+        .padding(.horizontal, 48 * scale)
+        .padding(.vertical, 24 * scale)
         .frame(
-            width: AppConst.Layout.cloudW,
-            height: AppConst.Layout.cloudH
+            width: AppConst.Layout.cloudW * scale,
+            height: AppConst.Layout.cloudH * scale
         )
         .background {
             Image(AssetName.Img.cloudText)

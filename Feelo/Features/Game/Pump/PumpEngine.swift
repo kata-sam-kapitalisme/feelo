@@ -7,7 +7,7 @@ final class PumpEngine {
     private(set) var count = 0
     private(set) var finished = false
     private(set) var handsUp = false
-    
+    private(set) var started = false
     private var state: PumpState = .down
     
     private enum PumpState {
@@ -25,9 +25,12 @@ final class PumpEngine {
             1.0
         )
     }
-    
+    func start() {
+        started = true
+    }
     func updateHands(_ points: [CGPoint]) {
-        guard !finished,
+        guard started,
+              !finished,
               !points.isEmpty
         else {
             return
@@ -53,7 +56,7 @@ final class PumpEngine {
     }
     
     func pump() {
-        guard !finished else {
+        guard started, !finished else {
             return
         }
         

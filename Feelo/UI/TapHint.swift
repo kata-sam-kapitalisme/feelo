@@ -1,16 +1,28 @@
 import SwiftUI
 
 struct TapHint: View {
-    let text: String
-
-    init(_ text: String = "Ketuk untuk lanjut") {
-        self.text = text
-    }
-
     var body: some View {
-        Text(text)
-            .font(AppFont.semi(18))
-            .foregroundStyle(.white.opacity(0.7))
-            .padding(.bottom, 16)
+        ZStack {
+            Color.black
+                .opacity(0.7)
+                .ignoresSafeArea()
+            
+            VStack {
+                Spacer()
+                
+                HStack(spacing: 12) {
+                    Spacer()
+                    
+                    GifView(name:AssetName.Gif.tapNext)
+                        .frame(width: 80, height: 80)
+                    
+                    Text("Ketuk untuk melanjutkan...")
+                        .font(AppFont.semi(24))
+                        .foregroundStyle(.white)
+                }
+                .padding(.trailing, 32)
+                .padding(.bottom, 32)
+            }
+        }
     }
 }
