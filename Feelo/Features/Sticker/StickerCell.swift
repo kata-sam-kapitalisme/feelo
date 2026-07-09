@@ -2,48 +2,114 @@ import SwiftUI
 
 struct StickerCell: View {
     let item: Sticker
-
+    
+    @State private var isFlipped = false
+    
     var body: some View {
         GeometryReader { geo in
             ZStack {
-                if let img = item.img {
-                    StickerAnim(
-                        img: img,
-                        width: imageW(img, geo.size),
-                        height: imageH(img, geo.size),
-                        delay: animDelay(img)
+                frontFace(geo: geo)
+                    .opacity(isFlipped ? 0 : 1)
+                
+                backFace(geo: geo)
+                    .opacity(isFlipped ? 1 : 0)
+                //for rotation
+                    .rotation3DEffect(
+                        .degrees(180),
+                        axis: (x: 0, y: 1, z: 0)
                     )
-                    .position(
-                        x: geo.size.width / 2,
-                        y: geo.size.height * AppConst.Sticker.stickerY
-                    )
-                } else {
-                    LockedSticker(shape: item.shape)
-                        .frame(
-                            width: lockW(item.shape, geo.size),
-                            height: lockH(item.shape, geo.size)
-                        )
-                        .position(
-                            x: geo.size.width / 2,
-                            y: geo.size.height * AppConst.Sticker.lockY
-                        )
-                }
-
-                Text(item.title)
-                    .font(AppFont.bold(AppConst.Sticker.cellTitleFont))
-                    .foregroundStyle(AppColor.textMain)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.72)
-                    .multilineTextAlignment(.center)
-                    .frame(width: geo.size.width * AppConst.Sticker.cellTitleW)
-                    .position(
-                        x: geo.size.width / 2,
-                        y: geo.size.height * AppConst.Sticker.cellTitleY
-                    )
+            }
+            .rotation3DEffect(
+                .degrees(isFlipped ? 180 : 0),
+                axis: (x: 0, y: 1, z: 0),
+                perspective: 0.35
+            )
+            .contentShape(Rectangle())
+            .onTapGesture {
+                flip()
             }
         }
     }
-
+    
+    private func flip() {
+        //locked sticker safe guard here---------------
+        guard item.unlocked else { return }
+        SoundSvc.shared.click()
+        withAnimation(.spring(response: 0.55, dampingFraction: 0.75)) {
+            isFlipped.toggle()
+        }
+    }
+    
+    @ViewBuilder
+    private func frontFace(geo: GeometryProxy) -> some View {
+        ZStack {
+            if let img = item.img {
+                StickerAnim(
+                    img: img,
+                    width: imageW(img, geo.size),
+                    height: imageH(img, geo.size),
+                    delay: animDelay(img)
+                )
+                .position(
+                    x: geo.size.width / 2,
+                    y: geo.size.height * AppConst.Sticker.stickerY
+                )
+            } else {
+                LockedSticker(shape: item.shape)
+                    .frame(
+                        width: lockW(item.shape, geo.size),
+                        height: lockH(item.shape, geo.size)
+                    )
+                    .position(
+                        x: geo.size.width / 2,
+                        y: geo.size.height * AppConst.Sticker.lockY
+                    )
+            }
+            
+            Text(item.title)
+                .font(AppFont.bold(AppConst.Sticker.cellTitleFont))
+                .foregroundStyle(AppColor.textMain)
+                .lineLimit(1)
+                .minimumScaleFactor(0.72)
+                .multilineTextAlignment(.center)
+                .frame(width: geo.size.width * AppConst.Sticker.cellTitleW)
+                .position(
+                    x: geo.size.width / 2,
+                    y: geo.size.height * AppConst.Sticker.cellTitleY
+                )
+        }
+    }
+    
+    @ViewBuilder
+    private func backFace(geo: GeometryProxy) -> some View {
+        RoundedRectangle(cornerRadius: 28, style: .continuous)
+            .fill(AppColor.page)
+            .overlay {
+                VStack(spacing: geo.size.height * 0.05) {
+                    Text(item.flipTitle ?? "")
+                        .font(AppFont.bold(AppConst.Sticker.cellTitleFont))
+                        .foregroundStyle(AppColor.textMain)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.72)
+                        .multilineTextAlignment(.center)
+                    
+                    Text(item.desc ?? "")
+                        .font(AppFont.medium(AppConst.Sticker.cellTextFont))
+                        .foregroundStyle(AppColor.textMain)
+                        .multilineTextAlignment(.center)
+                        .lineLimit(5)
+                        .minimumScaleFactor(0.6)
+                }
+                .padding(geo.size.width * 0.09)
+            }
+            .padding(geo.size.width * 0.05)
+            .shadow(
+                color: .black.opacity(0.12),
+                radius: 6,
+                y: 3
+            )
+    }
+    
     private func imageW(
         _ img: String,
         _ size: CGSize
@@ -52,7 +118,7 @@ struct StickerCell: View {
         ? size.width * AppConst.Sticker.basketStickerW
         : size.width * AppConst.Sticker.bubbleStickerW
     }
-
+    
     private func imageH(
         _ img: String,
         _ size: CGSize
@@ -61,7 +127,7 @@ struct StickerCell: View {
         ? size.height * AppConst.Sticker.basketStickerH
         : size.height * AppConst.Sticker.bubbleStickerH
     }
-
+    
     private func lockW(
         _ shape: StickerShape,
         _ size: CGSize
@@ -69,21 +135,21 @@ struct StickerCell: View {
         switch shape {
         case .tri, .downTri:
             return size.width * 0.52
-
+            
         case .circle:
             return size.width * 0.52
-
+            
         case .star:
             return size.width * 0.60
-
+            
         case .square:
             return size.width * 0.55
-
+            
         case .diamond:
             return size.width * 0.54
         }
     }
-
+    
     private func lockH(
         _ shape: StickerShape,
         _ size: CGSize
@@ -91,26 +157,26 @@ struct StickerCell: View {
         switch shape {
         case .tri, .downTri:
             return size.height * 0.55
-
+            
         case .circle:
             return size.height * 0.55
-
+            
         case .star:
             return size.height * 0.61
-
+            
         case .square:
             return size.height * 0.49
-
+            
         case .diamond:
             return size.height * 0.56
         }
     }
-
+    
     private func animDelay(_ img: String) -> Double {
         switch img {
         case AssetName.Img.stBasket:
             return 0.35
-
+            
         default:
             return 0
         }
@@ -119,12 +185,12 @@ struct StickerCell: View {
 
 private struct LockedSticker: View {
     let shape: StickerShape
-
+    
     var body: some View {
         GeometryReader { geo in
             ZStack {
                 bodyShape
-
+                
                 Text("?")
                     .font(AppFont.bold(markSize(geo.size)))
                     .foregroundStyle(AppColor.markGrey)
@@ -137,46 +203,46 @@ private struct LockedSticker: View {
             }
         }
     }
-
+    
     @ViewBuilder
     private var bodyShape: some View {
         switch shape {
         case .tri:
             Tri()
                 .fill(AppColor.lockGrey)
-
+            
         case .circle:
             Circle()
                 .fill(AppColor.lockGrey)
-
+            
         case .star:
             Star()
                 .fill(AppColor.lockGrey)
-
+            
         case .downTri:
             DownTri()
                 .fill(AppColor.lockGrey)
-
+            
         case .square:
             RoundedRectangle(
                 cornerRadius: 40,
                 style: .continuous
             )
             .fill(AppColor.lockGrey)
-
+            
         case .diamond:
             Diamond()
                 .fill(AppColor.lockGrey)
         }
     }
-
+    
     private func markSize(_ size: CGSize) -> CGFloat {
         min(
             size.width,
             size.height
         ) * AppConst.Sticker.lockMarkRatio
     }
-
+    
     private func markY(
         _ shape: StickerShape,
         _ size: CGSize
@@ -184,13 +250,13 @@ private struct LockedSticker: View {
         switch shape {
         case .tri:
             return size.height * 0.05
-
+            
         case .downTri:
             return -size.height * 0.03
-
+            
         case .star:
             return size.height * 0.03
-
+            
         case .circle, .square, .diamond:
             return 0
         }

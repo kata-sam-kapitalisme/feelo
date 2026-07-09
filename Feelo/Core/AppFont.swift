@@ -6,11 +6,13 @@ import UIKit
 enum AppFont {
     private static let boldName = "FredokaLight-Bold"
     private static let semiName = "FredokaLight-SemiBold"
-    private static let mediumName = "FredokaLight-Medium"
+    private static let mediumName = "Fredoka-Medium"
+    private static let regularName = "Fredoka-Regular"
     private static let files = [
         "Fredoka-Bold",
         "Fredoka-SemiBold",
-        "Fredoka-Medium"
+        "Fredoka-Medium",
+        "Fredoka-Regular"
     ]
 
     static func register() {
@@ -30,6 +32,11 @@ enum AppFont {
     static func medium(_ size: CGFloat) -> Font {
         custom(mediumName, size: size, weight: .medium)
     }
+    
+    static func regular(_ size: CGFloat) -> Font {
+        custom(regularName, size: size, weight: .regular)
+    }
+
 
     private static func custom(
         _ name: String,
