@@ -9,7 +9,7 @@ struct PumpIntro: View {
     var body: some View {
         GeometryReader { geo in
             let scale = min(1.0, min(geo.size.width / AppConst.Ref.w, geo.size.height / AppConst.Ref.h))
-            let bgH = geo.size.width * AppConst.Ref.h / AppConst.Ref.w
+            let bgH = max(geo.size.height, geo.size.width * AppConst.Ref.h / AppConst.Ref.w)
             let bgOffset = -max(0, bgH - geo.size.height)
 
             ZStack {
@@ -77,8 +77,8 @@ struct PumpIntro: View {
                 nav.screen = .game
             }
         }
-        .ignoresSafeArea()
     }
+    .ignoresSafeArea()
     }
 
     @ViewBuilder
