@@ -43,20 +43,6 @@ struct PumpOutro: View {
                     Spacer()
                 }
                 .padding(32 * scale)
-
-                VStack {
-                    Spacer()
-
-                    HStack {
-                        Spacer()
-
-                        NextButton {
-                            nav.finishStory()
-                        }
-                    }
-                    .padding(.trailing, 32)
-                    .padding(.bottom, 32)
-                }
             }
             .onAppear {
                 SoundSvc.shared.playAmbient()
@@ -65,12 +51,15 @@ struct PumpOutro: View {
             .onDisappear {
                 SoundSvc.shared.stopVoice()
             }
+            .tapSound {
+                nav.finishStory()
+            }
         }
         .ignoresSafeArea()
     }
 }
 
-#Preview(traits: .landscapeLeft) {
-    PumpOutro()
-        .environment(AppNav())
-}
+//#Preview(traits: .landscapeLeft) {
+//    PumpOutro()
+//        .environment(AppNav())
+//}
