@@ -157,6 +157,7 @@ enum AppConst {
         static let cellTitleY: CGFloat = 0.86
         static let cellTitleW: CGFloat = 0.86
         static let cellTitleFont: CGFloat = 34
+        static let cellTextFont: CGFloat = 24
 
         static let stickerY: CGFloat = 0.38
         static let bubbleStickerW: CGFloat = 0.78
