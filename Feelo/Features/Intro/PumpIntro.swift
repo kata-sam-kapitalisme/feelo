@@ -27,7 +27,7 @@ struct PumpIntro: View {
 
                 ballInBushLayer
                 characterLayer(bgH: bgH, screenSize: geo.size)
-
+                emotionCardLayer(screenSize: geo.size)
                 if !tapInstruction {
                     textLayer(scale: scale)
                 }
@@ -97,7 +97,25 @@ struct PumpIntro: View {
             )
         }
     }
-
+    
+    @ViewBuilder
+    private func emotionCardLayer(screenSize: CGSize) -> some View {
+        if vm.step == .three {
+            let cardWidth = screenSize.width * 0.42
+            // darkened layer
+            Color.black
+                .opacity(0.4)
+                .ignoresSafeArea()
+            VStack {
+                Image(AssetName.Img.kecewa)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: cardWidth)
+            }
+            .frame(width: screenSize.width, height: screenSize.height, alignment: .bottom)
+        }
+    }
+    
     private func characterLayer(bgH: CGFloat, screenSize: CGSize) -> some View {
         let isAction = vm.charGif == AssetName.Gif.pump3
         let charSize = bgH * (isAction ? AppConst.Stage.pumpCharAction : AppConst.Stage.pumpCharSmall)
@@ -105,7 +123,7 @@ struct PumpIntro: View {
         let x = vm.step == .two
             ? AppConst.Stage.pumpSceneTwoLead + charSize / 2
             : screenSize.width / 2
-
+        
         return GifView(name: vm.charGif, fit: "contain")
             .frame(width: charSize, height: charSize)
             .position(x: x, y: screenSize.height - charSize / 2 + yOffset)
@@ -129,7 +147,7 @@ struct PumpIntro: View {
     }
 }
 
-#Preview(traits: .landscapeLeft) {
-    PumpIntro()
-        .environment(AppNav())
-}
+//#Preview(traits: .landscapeLeft) {
+//    PumpIntro()
+//        .environment(AppNav())
+//}
