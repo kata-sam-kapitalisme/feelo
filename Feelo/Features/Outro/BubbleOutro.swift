@@ -46,7 +46,7 @@ struct BubbleOutro: View {
                 .padding(32 * scale)
                 
                 if outroOverlay {
-                    let cardWidth = geo.size.width * 0.32
+                    let cardWidth = geo.size.width * 0.50
                     
                     // darkened layer
                     Color.black
@@ -66,12 +66,12 @@ struct BubbleOutro: View {
                         HStack {
                             Spacer()
                             
-                            NextButton {
+                            DoneButton {
                                 nav.finishStory()
                             }
                         }
-                        .padding(.trailing, 32)
-                        .padding(.bottom, 32)
+                        .padding(.trailing, 50)
+                        .padding(.bottom, 52)
                     }
                 }
             }

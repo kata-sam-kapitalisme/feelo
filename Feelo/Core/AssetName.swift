@@ -8,6 +8,7 @@ enum AssetName {
         static let badge = "badge"
         static let lockPic = "lockPic"
         static let nextButton = "nextButton"
+        static let doneButton = "doneButton"
 
         static let bubble = "bubble"
         static let bubSplash = "bubSplash"

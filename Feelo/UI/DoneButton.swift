@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct NextButton: View {
+struct DoneButton: View {
     let action: () -> Void
     
     @State private var isPulsing = false
@@ -10,10 +10,10 @@ struct NextButton: View {
             SoundSvc.shared.click()
             action()
         } label: {
-            Image(AssetName.Img.nextButton)
+            Image(AssetName.Img.doneButton)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 120)
+                .frame(width: 200)
                 .scaleEffect(isPulsing ? 1.08 : 1.0)
                 .animation(
                     .easeInOut(duration: 0.8)
