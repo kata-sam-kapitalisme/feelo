@@ -4,36 +4,48 @@ struct StickerRepo {
             level(
                 id: "pecahkan-gelembung",
                 title: "Bubble Pop!",
-                shape: .tri
+                flipTitle:"Bersemangat",
+                shape: .tri,
+                desc: "perasaan ketika hati kita merasa sangat gembira, bertenaga, dan tidak sabar untuk melakukan sesuatu yang seru!"
             ),
             level(
                 id: "pompa-bola",
                 title: "Pom-pom-pa!",
-                shape: .circle
+                flipTitle:"Kecewa",
+                shape: .circle,
+                desc: "perasaan ketika hati kita merasa sangat gembira, bertenaga, dan tidak sabar untuk melakukan sesuatu yang seru!"
             ),
             Sticker(
                 id: "future-star",
                 title: "???",
+                flipTitle: nil,
                 img: nil,
-                shape: .star
+                shape: .star,
+                desc: nil
             ),
             Sticker(
                 id: "future-down-tri",
                 title: "???",
+                flipTitle: nil,
                 img: nil,
-                shape: .downTri
+                shape: .downTri,
+                desc: nil
             ),
             Sticker(
                 id: "future-square",
                 title: "???",
+                flipTitle: nil,
                 img: nil,
-                shape: .square
+                shape: .square,
+                desc: nil
             ),
             Sticker(
                 id: "future-diamond",
                 title: "???",
+                flipTitle: nil,
                 img: nil,
-                shape: .diamond
+                shape: .diamond,
+                desc: nil
             )
         ]
     }
@@ -41,7 +53,9 @@ struct StickerRepo {
     private func level(
         id: String,
         title: String,
-        shape: StickerShape
+        flipTitle: String,
+        shape: StickerShape,
+        desc: String
     ) -> Sticker {
         guard
             let item = ScenarioRepo.item(id),
@@ -50,16 +64,20 @@ struct StickerRepo {
             return Sticker(
                 id: id,
                 title: "???",
+                flipTitle: nil,
                 img: nil,
-                shape: shape
+                shape: shape,
+                desc: nil
             )
         }
 
         return Sticker(
             id: id,
             title: title,
+            flipTitle: flipTitle,
             img: item.badgeImg,
-            shape: shape
+            shape: shape,
+            desc: desc
         )
     }
 }

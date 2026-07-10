@@ -18,15 +18,15 @@ struct BubbleIntro: View {
                     .frame(width: geo.size.width, height: bgH)
                     .offset(y: bgOffset)
                     .ignoresSafeArea()
-
+                
                 GifView(name: AssetName.Gif.bubBg)
                     .frame(width: geo.size.width, height: bgH)
                     .offset(y: bgOffset)
                     .ignoresSafeArea()
-
+                
                 characterLayer(bgH: bgH, bgOffset: bgOffset, screenSize: geo.size)
-
-                if vm.step == .four {
+                //changed four to three here
+                if vm.step == .three || vm.step == .four{
                     StageSprite(
                         source: .gif,
                         name: AssetName.Gif.bubItems,
@@ -44,22 +44,20 @@ struct BubbleIntro: View {
             if tapInstruction {
                 TapHint()
             }
-            
-            if vm.step == .five {
-                VStack {
-                    Spacer()
-                    
-                    HStack {
+            // changed five to four here
+                if vm.step == .four {
+                    VStack {
                         Spacer()
-                        
-                        NextButton {
-                            nav.screen = .game
+                        HStack {
+                            Spacer()
+                            NextButton {
+                                nav.screen = .game
+                            }
                         }
+                        .padding(.trailing, 32)
+                        .padding(.bottom, 32)
                     }
-                    .padding(.trailing, 32)
-                    .padding(.bottom, 32)
                 }
-            }
         }
         
         .onAppear {
@@ -80,8 +78,8 @@ struct BubbleIntro: View {
                 SoundSvc.shared.playVoice(vm.voice)
                 return
             }
-            
-            guard vm.step != .five else { return }
+            //change five to four here
+            guard vm.step != .four else { return }
             
             if vm.next() {
                 nav.screen = .game
@@ -93,7 +91,21 @@ struct BubbleIntro: View {
 
     @ViewBuilder
     private func characterLayer(bgH: CGFloat, bgOffset: CGFloat, screenSize: CGSize) -> some View {
-        if vm.gif == AssetName.Gif.bubTut {
+        if vm.step == .four {
+            let cardWith = screenSize.width * 0.42
+            //darkened layer
+            Color.black
+                .opacity(0.4)
+                .ignoresSafeArea()
+            VStack{
+                Image(AssetName.Img.bersemangat)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: cardWith)
+//                    .position(x:screenSize.width/2, y: screenSize.height-cardWith * 0.5)
+            }.frame(width: screenSize.width, height: screenSize.height, alignment: .bottom)
+        }
+        else if vm.gif == AssetName.Gif.bubTut {
             let tutW = screenSize.width * 0.85
             let tutH = bgH * 0.85
             GifView(name: vm.gif)
