@@ -125,7 +125,7 @@ struct BubbleIntro: View {
     
 }
 
-#Preview(traits: .landscapeLeft) {
-    BubbleIntro()
-        .environment(AppNav())
-}
+//#Preview(traits: .landscapeLeft) {
+//    BubbleIntro()
+//        .environment(AppNav())
+//}

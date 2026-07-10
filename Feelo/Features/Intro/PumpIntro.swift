@@ -129,7 +129,7 @@ struct PumpIntro: View {
     }
 }
 
-#Preview(traits: .landscapeLeft) {
-    PumpIntro()
-        .environment(AppNav())
-}
+//#Preview(traits: .landscapeLeft) {
+//    PumpIntro()
+//        .environment(AppNav())
+//}
