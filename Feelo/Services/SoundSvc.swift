@@ -108,12 +108,14 @@ final class SoundSvc {
     }
     
     func playVoice(_ name: String) {
+        voicePlayer?.stop()
+        voicePlayer = nil
+        
         guard let player = makePlayer(name) else {
             print("Missing voice: \(name)")
             return
         }
         
-        voicePlayer?.stop()
         voicePlayer = player
         voicePlayer?.play()
     }

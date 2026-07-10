@@ -2,16 +2,16 @@ import SwiftUI
 
 struct BubbleIntro: View {
     @Environment(AppNav.self) private var nav
-
+    
     @State private var vm = BubbleIntroVM()
     @State private var tapInstruction = true
-
+    
     var body: some View {
         GeometryReader { geo in
             let scale = min(1.0, min(geo.size.width / AppConst.Ref.w, geo.size.height / AppConst.Ref.h))
             let bgH = max(geo.size.height, geo.size.width * AppConst.Ref.h / AppConst.Ref.w)
             let bgOffset = -max(0, bgH - geo.size.height)
-
+            
             ZStack {
                 Image(AssetName.Img.bgSky)
                     .resizable()
@@ -24,9 +24,8 @@ struct BubbleIntro: View {
                     .offset(y: bgOffset)
                     .ignoresSafeArea()
                 
-                characterLayer(bgH: bgH, bgOffset: bgOffset, screenSize: geo.size)
                 //changed four to three here
-                if vm.step == .three || vm.step == .four{
+                if vm.step == .three || vm.step == .four || vm.step == .five {
                     StageSprite(
                         source: .gif,
                         name: AssetName.Gif.bubItems,
@@ -36,16 +35,18 @@ struct BubbleIntro: View {
                         )
                     )
                 }
-
+                
+                characterLayer(bgH: bgH, bgOffset: bgOffset, screenSize: geo.size)
+                
                 if !tapInstruction {
                     textLayer(scale: scale)
                 }
-            
-            if tapInstruction {
-                TapHint()
-            }
-            // changed five to four here
-                if vm.step == .four {
+                
+                if tapInstruction {
+                    TapHint()
+                }
+                // changed five to four here
+                if vm.step == .five {
                     VStack {
                         Spacer()
                         HStack {
@@ -58,51 +59,61 @@ struct BubbleIntro: View {
                         .padding(.bottom, 32)
                     }
                 }
-        }
-        
-        .onAppear {
-            SoundSvc.shared.playAmbient()
-            guard !tapInstruction else { return }
-            SoundSvc.shared.playVoice(vm.voice)
-        }
-        .onChange(of: vm.step) { _, _ in
-            guard !tapInstruction else { return }
-            SoundSvc.shared.playVoice(vm.voice)
-        }
-        .onDisappear {
-            SoundSvc.shared.stopVoice()
-        }
-        .tapSound {
-            if tapInstruction {
-                tapInstruction = false
-                SoundSvc.shared.playVoice(vm.voice)
-                return
             }
-            //change five to four here
-            guard vm.step != .four else { return }
             
-            if vm.next() {
-                nav.screen = .game
+            .onAppear {
+                SoundSvc.shared.playAmbient()
+                guard !tapInstruction else { return }
+                SoundSvc.shared.playVoice(vm.voice)
+            }
+            .onChange(of: vm.step) { _, _ in
+                guard !tapInstruction else { return }
+                if vm.voice.isEmpty {
+                    SoundSvc.shared.stopVoice()
+                } else {
+                    SoundSvc.shared.playVoice(vm.voice)
+                }
+            }
+            .onDisappear {
+                SoundSvc.shared.stopVoice()
+            }
+            .tapSound {
+                if tapInstruction {
+                    tapInstruction = false
+                    SoundSvc.shared.playVoice(vm.voice)
+                    return
+                }
+                //change five to four here
+                // guard vm.step != .five else { return }
+                
+                if vm.step == .five {
+                    return
+                }
+                
+                vm.next()
+                
+                //                if vm.next() {
+                //                    nav.screen = .game
+                //                }
             }
         }
+        .ignoresSafeArea()
     }
-    .ignoresSafeArea()
-    }
-
+    
     @ViewBuilder
     private func characterLayer(bgH: CGFloat, bgOffset: CGFloat, screenSize: CGSize) -> some View {
-        if vm.step == .four {
-            let cardWith = screenSize.width * 0.42
+        if vm.step == .five {
+            let cardWith = screenSize.width * 0.5
             //darkened layer
             Color.black
-                .opacity(0.4)
+                .opacity(0.6)
                 .ignoresSafeArea()
             VStack{
                 Image(AssetName.Img.bersemangat)
                     .resizable()
                     .scaledToFit()
                     .frame(width: cardWith)
-//                    .position(x:screenSize.width/2, y: screenSize.height-cardWith * 0.5)
+                //                    .position(x:screenSize.width/2, y: screenSize.height-cardWith * 0.5)
             }.frame(width: screenSize.width, height: screenSize.height, alignment: .bottom)
         }
         else if vm.gif == AssetName.Gif.bubTut {
@@ -118,18 +129,18 @@ struct BubbleIntro: View {
                 .position(x: screenSize.width / 2, y: screenSize.height - charSize / 2)
         }
     }
-
+    
     private func textLayer(scale: CGFloat) -> some View {
         VStack {
             Spacer()
                 .frame(maxHeight: 40)
-
+            
             CloudBubble(text: vm.text, scale: scale)
                 .animation(
                     .easeInOut(duration: 0.3),
                     value: vm.step
                 )
-
+            
             Spacer()
         }
         .padding(32 * scale)

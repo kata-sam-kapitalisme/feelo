@@ -46,7 +46,7 @@ struct PumpOutro: View {
                 .padding(32 * scale)
                 
                 if outroOverlay {
-                    let cardWidth = geo.size.width * 0.32
+                    let cardWidth = geo.size.width * 0.4
                     
                     // darkened layer
                     Color.black

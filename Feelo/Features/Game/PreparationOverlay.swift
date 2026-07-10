@@ -74,6 +74,8 @@ struct PreparationOverlay: View {
             }
         }
         .task {
+            try? await Task.sleep(nanoseconds: 4_800_000_000)
+            
             for i in stride(from: 5, through: 1, by: -1) {
                 countdown = i
                 SoundSvc.shared.click()

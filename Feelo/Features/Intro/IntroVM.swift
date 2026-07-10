@@ -5,8 +5,7 @@ enum BubbleIntroStep: Equatable {
     case two
     case three
     case four
-//    case five
-    
+    case five
 }
 
 @Observable
@@ -27,8 +26,8 @@ final class BubbleIntroVM {
         case .four:
             return AssetName.Gif.bub2
 
-//        case .five:
-//            return AssetName.Gif.bubTut
+        case .five:
+            return AssetName.Gif.bub2
         }
     }
 
@@ -46,8 +45,8 @@ final class BubbleIntroVM {
         case .four:
             return "Wah, gelembungnya banyak sekali! Kamu merasa bersemangat!"
 
-//        case .five:
-//            return "Ayo pecahkan gelembung-gelembungnya!"
+        case .five:
+            return "Wah, gelembungnya banyak sekali! Kamu merasa bersemangat!"
         }
     }
     
@@ -61,116 +60,8 @@ final class BubbleIntroVM {
             return AssetName.Voiceover.bubble_intro_3
         case .four:
             return AssetName.Voiceover.bubble_intro_4
-//        case .five:
-//            return AssetName.Voiceover.bubble_intro_5
-        }
-    }
-
-    func next() -> Bool {
-        switch step {
-        case .one:
-            step = .two
-            return false
-
-        case .two:
-            step = .three
-            return false
-
-        case .three:
-            step = .four
-            return false
-
-        case .four:
-//            step = .five
-            return true
-
-//        case .five:
-//            return true
-        }
-    }
-}
-
-enum PumpIntroStep: Equatable {
-    case one
-    case two
-    case three
-    case four
-    case five
-}
-
-@Observable
-final class PumpIntroVM {
-    var step: PumpIntroStep = .one
-
-    var bgGif: String {
-        switch step {
-        case .one:
-            return AssetName.Gif.bubBg
-
-        case .two:
-            return AssetName.Gif.pumpBg
-
-        case .three:
-            return AssetName.Gif.pumpBg
-
-        case .four:
-            return AssetName.Gif.pumpBg
-
         case .five:
-            return AssetName.Gif.pumpBg
-        }
-    }
-
-    var charGif: String {
-        switch step {
-        case .one:
-            return AssetName.Gif.pump1
-
-        case .two:
-            return AssetName.Gif.pump1
-
-        case .three:
-            return AssetName.Gif.pump2
-
-        case .four:
-            return AssetName.Gif.pump3
-
-        case .five:
-            return AssetName.Gif.pump4
-        }
-    }
-
-    var text: String {
-        switch step {
-        case .one:
-            return "Kamu selesai bermain gelembung bersama Tilly. Sekarang, Tilly mengajakmu mencoba permainan lain."
-
-        case .two:
-            return "Tilly melihat sebuah bola di semak-semak. Ia mengajakmu mengambilnya bersama."
-
-        case .three:
-            return "Oh tidak... bolanya ternyata kempes! Kamu merasa kecewa."
-
-        case .four:
-            return "Tidak apa-apa! Ayo kita pompa bolanya bersama!"
-
-        case .five:
-            return "Yuk, Pompa Bolanya! Gerakkan tanganmu naik dan turun untuk memompa bola!"
-        }
-    }
-    
-    var voice: String {
-        switch step {
-        case .one:
-            return AssetName.Voiceover.pompa_intro_1
-        case .two:
-            return AssetName.Voiceover.pompa_intro_2
-        case .three:
-            return AssetName.Voiceover.pompa_intro_3
-        case .four:
-            return AssetName.Voiceover.pompa_intro_4
-        case .five:
-            return AssetName.Voiceover.pompa_intro_5
+            return ""
         }
     }
 
@@ -193,6 +84,131 @@ final class PumpIntroVM {
             return false
 
         case .five:
+            return true
+        }
+    }
+}
+
+enum PumpIntroStep: Equatable {
+    case one
+    case two
+    case three
+    case four
+    case five
+    case six
+}
+
+@Observable
+final class PumpIntroVM {
+    var step: PumpIntroStep = .one
+
+    var bgGif: String {
+        switch step {
+        case .one:
+            return AssetName.Gif.bubBg
+
+        case .two:
+            return AssetName.Gif.pumpBg
+
+        case .three:
+            return AssetName.Gif.pumpBg
+
+        case .four:
+            return AssetName.Gif.pumpBg
+
+        case .five:
+            return AssetName.Gif.pumpBg
+            
+        case .six:
+            return AssetName.Gif.pumpBg
+        }
+    }
+
+    var charGif: String {
+        switch step {
+        case .one:
+            return AssetName.Gif.pump1
+
+        case .two:
+            return AssetName.Gif.pump1
+
+        case .three:
+            return AssetName.Gif.pump2
+
+        case .four:
+            return AssetName.Gif.pump2
+
+        case .five:
+            return AssetName.Gif.pump3
+            
+        case .six:
+            return AssetName.Gif.pump4
+        }
+    }
+
+    var text: String {
+        switch step {
+        case .one:
+            return "Kamu selesai bermain gelembung bersama Tilly. Sekarang, Tilly mengajakmu mencoba permainan lain."
+
+        case .two:
+            return "Tilly melihat sebuah bola di semak-semak. Ia mengajakmu mengambilnya bersama."
+
+        case .three:
+            return "Oh tidak... bolanya ternyata kempes! Kamu merasa kecewa."
+
+        case .four:
+            return "Oh tidak... bolanya ternyata kempes! Kamu merasa kecewa."
+
+        case .five:
+            return "Tidak apa-apa! Ayo kita pompa bolanya bersama!"
+            
+        case .six:
+            return "Yuk, Pompa Bolanya! Gerakkan tanganmu naik dan turun untuk memompa bola!"
+        
+        }
+    }
+    
+    var voice: String {
+        switch step {
+        case .one:
+            return AssetName.Voiceover.pompa_intro_1
+        case .two:
+            return AssetName.Voiceover.pompa_intro_2
+        case .three:
+            return AssetName.Voiceover.pompa_intro_3
+        case .four:
+            return ""
+        case .five:
+            return AssetName.Voiceover.pompa_intro_4
+        case .six:
+            return AssetName.Voiceover.pompa_intro_5
+        }
+    }
+
+    func next() -> Bool {
+        switch step {
+        case .one:
+            step = .two
+            return false
+
+        case .two:
+            step = .three
+            return false
+
+        case .three:
+            step = .four
+            return false
+            
+        case .four:
+            step = .five
+            return false
+
+        case .five:
+            step = .six
+            return false
+
+        case .six:
             return true
         }
     }

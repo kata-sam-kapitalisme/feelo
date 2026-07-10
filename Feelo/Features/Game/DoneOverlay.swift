@@ -105,6 +105,7 @@ struct DoneOverlay: View {
 
             if success {
                 SoundSvc.shared.effect(AssetName.Sound.confetti)
+                SoundSvc.shared.playVoice(AssetName.Voiceover.activity_complete)
             }
 
             DispatchQueue.main.asyncAfter(

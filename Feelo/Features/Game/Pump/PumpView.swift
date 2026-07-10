@@ -40,10 +40,10 @@ struct PumpView: View {
                 ballImage(geo)
                     .frame(height: geo.size.height)
 
-                if !engine.finished {
-                    guideCard(geo)
-                        .zIndex(20)
-                }
+//                if !engine.finished {
+//                    guideCard(geo)
+//                        .zIndex(20)
+//                }
 
                 if showDone {
                     DoneOverlay(
@@ -90,6 +90,9 @@ struct PumpView: View {
                 }
             }
             .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    SoundSvc.shared.playVoice(AssetName.Voiceover.activity_preparation)
+                }
             }
             .onChange(of: showPreparation) { _, isPrep in
                 if !isPrep {
@@ -241,52 +244,52 @@ struct PumpView: View {
         )
     }
 
-    private func guideCard(_ geo: GeometryProxy) -> some View {
-        VStack {
-            VStack(spacing: AppConst.PumpLayout.guideSpace) {
-                Text("Yuk, Pompa Bolanya!")
-                    .font(AppFont.bold(AppConst.PumpLayout.guideTitleFont))
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.72)
-
-                Text("Gerakkan tanganmu naik dan turun\nuntuk memompa bola!")
-                    .font(AppFont.semi(AppConst.PumpLayout.guideTextFont))
-                    .multilineTextAlignment(.center)
-                    .minimumScaleFactor(0.72)
-            }
-            .foregroundStyle(.black)
-            .padding(.horizontal, AppConst.PumpLayout.guidePadX)
-            .padding(.vertical, AppConst.PumpLayout.guidePadY)
-            .frame(
-                width: geo.size.width * AppConst.PumpLayout.guideBoxW,
-                height: min(
-                    AppConst.PumpLayout.guideMaxH,
-                    max(
-                        AppConst.PumpLayout.guideMinH,
-                        geo.size.height * AppConst.PumpLayout.guideBoxH
-                    )
-                )
-            )
-            .background {
-                RoundedRectangle(cornerRadius: 20)
-                    .fill(.white.opacity(0.88))
-                    .shadow(
-                        color: .black.opacity(0.12),
-                        radius: 8,
-                        x: 0,
-                        y: 4
-                    )
-            }
-            .padding(.top, geo.safeAreaInsets.top + AppConst.PumpLayout.guideTopPad)
-
-            Spacer()
-        }
-        .frame(
-            maxWidth: .infinity,
-            maxHeight: .infinity,
-            alignment: .top
-        )
-    }
+//    private func guideCard(_ geo: GeometryProxy) -> some View {
+//        VStack {
+//            VStack(spacing: AppConst.PumpLayout.guideSpace) {
+//                Text("Yuk, Pompa Bolanya!")
+//                    .font(AppFont.bold(AppConst.PumpLayout.guideTitleFont))
+//                    .lineLimit(1)
+//                    .minimumScaleFactor(0.72)
+//
+//                Text("Gerakkan tanganmu naik dan turun\nuntuk memompa bola!")
+//                    .font(AppFont.semi(AppConst.PumpLayout.guideTextFont))
+//                    .multilineTextAlignment(.center)
+//                    .minimumScaleFactor(0.72)
+//            }
+//            .foregroundStyle(.black)
+//            .padding(.horizontal, AppConst.PumpLayout.guidePadX)
+//            .padding(.vertical, AppConst.PumpLayout.guidePadY)
+//            .frame(
+//                width: geo.size.width * AppConst.PumpLayout.guideBoxW,
+//                height: min(
+//                    AppConst.PumpLayout.guideMaxH,
+//                    max(
+//                        AppConst.PumpLayout.guideMinH,
+//                        geo.size.height * AppConst.PumpLayout.guideBoxH
+//                    )
+//                )
+//            )
+//            .background {
+//                RoundedRectangle(cornerRadius: 20)
+//                    .fill(.white.opacity(0.88))
+//                    .shadow(
+//                        color: .black.opacity(0.12),
+//                        radius: 8,
+//                        x: 0,
+//                        y: 4
+//                    )
+//            }
+//            .padding(.top, geo.safeAreaInsets.top + AppConst.PumpLayout.guideTopPad)
+//
+//            Spacer()
+//        }
+//        .frame(
+//            maxWidth: .infinity,
+//            maxHeight: .infinity,
+//            alignment: .top
+//        )
+//    }
     
     private func guideLines(_ geo: GeometryProxy) -> some View {
         ZStack {

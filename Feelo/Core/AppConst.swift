@@ -10,7 +10,7 @@ enum AppConst {
         static let tutorialNs: UInt64 = 7_000_000_000
         static let splashDur: TimeInterval = 0.35
         static let doneDelay: TimeInterval = 1.5
-        static let doneAuto: TimeInterval = 1.8
+        static let doneAuto: TimeInterval = 4
     }
 
     enum Game {

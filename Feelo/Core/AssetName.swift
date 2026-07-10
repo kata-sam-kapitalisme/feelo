@@ -64,7 +64,7 @@ enum AssetName {
     }
 
     enum Sound {
-        static let bgm = "bgm"
+        static let bgm = "bgm_homepage"
         static let click = "click"
         static let confetti = "confetti"
         static let levelup = "levelup"
@@ -87,5 +87,7 @@ enum AssetName {
         static let pompa_intro_4 = "pompa_intro_4"
         static let pompa_intro_5 = "pompa_intro_5"
         static let pompa_outro = "pompa_outro"
+        static let activity_preparation = "activity_preparation"
+        static let activity_complete = "activity_complete"
     }
 }

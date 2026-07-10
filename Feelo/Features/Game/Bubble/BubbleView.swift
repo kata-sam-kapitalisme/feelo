@@ -68,6 +68,11 @@ struct BubbleView: View {
                         }
                         engine.start()
                     }
+                    .onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                            SoundSvc.shared.playVoice(AssetName.Voiceover.activity_preparation)
+                        }
+                    }
                     .zIndex(150)
                     .transition(.opacity)
                 }
