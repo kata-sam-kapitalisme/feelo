@@ -116,6 +116,10 @@ struct PumpIntro: View {
                     .frame(width: cardWidth)
             }
             .frame(width: screenSize.width, height: screenSize.height, alignment: .bottom)
+            .contentShape(Rectangle())
+            .onTapGesture {
+                SoundSvc.shared.playVoice(AssetName.Voiceover.kecewa)
+            }
         }
     }
     

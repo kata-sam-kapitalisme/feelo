@@ -25,7 +25,7 @@ struct BubbleIntro: View {
                     .ignoresSafeArea()
                 
                 //changed four to three here
-                if vm.step == .three || vm.step == .four || vm.step == .five {
+                if vm.step == .five {
                     StageSprite(
                         source: .gif,
                         name: AssetName.Gif.bubItems,
@@ -37,6 +37,17 @@ struct BubbleIntro: View {
                 }
                 
                 characterLayer(bgH: bgH, bgOffset: bgOffset, screenSize: geo.size)
+                
+                if vm.step == .three || vm.step == .four {
+                    StageSprite(
+                        source: .gif,
+                        name: AssetName.Gif.bubItems,
+                        spec: SpriteSpec(
+                            size: .squareFromHeight(AppConst.Stage.bubbleItems),
+                            place: .aligned(.center)
+                        )
+                    )
+                }
                 
                 if !tapInstruction {
                     textLayer(scale: scale)
@@ -115,6 +126,10 @@ struct BubbleIntro: View {
                     .frame(width: cardWith)
                 //                    .position(x:screenSize.width/2, y: screenSize.height-cardWith * 0.5)
             }.frame(width: screenSize.width, height: screenSize.height, alignment: .bottom)
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    SoundSvc.shared.playVoice(AssetName.Voiceover.bersemangat)
+                }
         }
         else if vm.gif == AssetName.Gif.bubTut {
             let tutW = screenSize.width * 0.85
