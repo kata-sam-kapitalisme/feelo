@@ -36,7 +36,7 @@ struct PumpIntro: View {
                 TapHint()
             }
             
-            if vm.step == .five {
+            if vm.step == .three{
                 VStack {
                     Spacer()
                     
@@ -44,7 +44,7 @@ struct PumpIntro: View {
                         Spacer()
                         
                         NextButton {
-                            nav.screen = .game
+                            _ = vm.next()
                         }
                     }
                     .padding(.trailing, 32)
@@ -70,8 +70,6 @@ struct PumpIntro: View {
                 SoundSvc.shared.playVoice(vm.voice)
                 return
             }
-            
-            guard vm.step != .five else { return }
             
             if vm.next() {
                 nav.screen = .game
@@ -101,18 +99,38 @@ struct PumpIntro: View {
     @ViewBuilder
     private func emotionCardLayer(screenSize: CGSize) -> some View {
         if vm.step == .three {
-            let cardWidth = screenSize.width * 0.42
-            // darkened layer
-            Color.black
-                .opacity(0.4)
-                .ignoresSafeArea()
-            VStack {
-                Image(AssetName.Img.kecewa)
+            let cardWidth = screenSize.width * 0.60
+            //darkened layer
+            ZStack {
+                Color.black
+                    .opacity(0.4)
+                    .ignoresSafeArea()
+                
+                Image(AssetName.Img.emphasizeKecewa)
                     .resizable()
                     .scaledToFit()
                     .frame(width: cardWidth)
+                    .frame(
+                        maxWidth: .infinity,
+                        maxHeight: .infinity,
+                        alignment: .bottom
+                    )
+
+                    EmphasizeBubble(
+                        title: "Kecewa",
+                        pronunciation: "/ke.ce.wa/",
+                        description: "perasaan sedih yang muncul ketika sesuatu yang kamu harapkan ternyata tidak berjalan sesuai dengan keinginanmu."
+                    )
+                    //                    {
+                    //                        SoundSvc.shared.playVoice("bersemangat")
+                    //                    }
+                    
+                    .frame(
+                        maxWidth: .infinity,
+                        maxHeight: .infinity,
+                        alignment: .bottom
+                    )
             }
-            .frame(width: screenSize.width, height: screenSize.height, alignment: .bottom)
         }
     }
     
@@ -147,7 +165,7 @@ struct PumpIntro: View {
     }
 }
 
-//#Preview(traits: .landscapeLeft) {
-//    PumpIntro()
-//        .environment(AppNav())
-//}
+#Preview(traits: .landscapeLeft) {
+    PumpIntro()
+        .environment(AppNav())
+}
