@@ -1,6 +1,25 @@
 import SwiftUI
 
 extension View {
+    /// True on 13" iPads (long side > 1200pt); false on 11" and smaller.
+    /// Use this wherever layout needs to differ between the two iPad sizes.
+    var isLargeIPad: Bool {
+        let s = UIScreen.main.bounds.size
+        return max(s.width, s.height) > 1200
+    }
+
+    var safeAreaBottom: CGFloat {
+        UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .first?.keyWindow?.safeAreaInsets.bottom ?? 0
+    }
+
+    /// Adds bottom padding that accounts for the home-indicator bar on 11" iPads.
+    /// On 13" iPads the bar is absent so `base` is used directly.
+    func bottomSafePadding(base: CGFloat = 32, offset: CGFloat = 45) -> some View {
+        padding(.bottom, isLargeIPad ? base : max(base, safeAreaBottom + offset))
+    }
+
     func cardShadow() -> some View {
         shadow(
             color: .black.opacity(0.08),

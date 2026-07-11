@@ -67,7 +67,7 @@ struct BubbleIntro: View {
                             }
                         }
                         .padding(.trailing, 32)
-                        .padding(.bottom, 32)
+                        .bottomSafePadding()
                     }
                 }
             }

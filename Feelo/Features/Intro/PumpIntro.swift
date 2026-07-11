@@ -31,7 +31,6 @@ struct PumpIntro: View {
                 if !tapInstruction {
                     textLayer(scale: scale)
                 }
-                
                 if tapInstruction {
                     TapHint()
                 }
@@ -44,11 +43,11 @@ struct PumpIntro: View {
                             Spacer()
                             
                             NextButton {
-                                vm.next()
+                                _ = vm.next()
                             }
                         }
                         .padding(.trailing, 32)
-                        .padding(.bottom, 32)
+                        .bottomSafePadding()
                     }
                 }
             }
@@ -73,6 +72,10 @@ struct PumpIntro: View {
                 if tapInstruction {
                     tapInstruction = false
                     SoundSvc.shared.playVoice(vm.voice)
+                    return
+                }
+                
+                if vm.step == .four {
                     return
                 }
                 

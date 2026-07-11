@@ -31,8 +31,12 @@ struct HomeView: View {
                     placeList(size)
                         .frame(height: size.placeTotalH)
                     
-                    Spacer(minLength: 0)
-                    
+                    if size.isLargeIPad {
+                        Spacer(minLength: size.sectionGap)
+                    } else {
+                        Color.clear.frame(height: size.sectionGap)
+                    }
+
                     sectionTitle(
                         "Macam-macam emosi",
                         fontSize: size.titleFont
@@ -207,7 +211,9 @@ private struct HomeSize {
     let placeH: CGFloat
     let placeBottom: CGFloat
     let placeTotalH: CGFloat
-    
+    let sectionGap: CGFloat
+    let isLargeIPad: Bool
+
     let emotion: CGFloat
     let emotionBottom: CGFloat
     let emotionTotalH: CGFloat
@@ -242,18 +248,17 @@ private struct HomeSize {
             )
         )
         
-        let fixedHeight =
-        geo.safeAreaInsets.top +
-        geo.safeAreaInsets.bottom +
-        8 +
-        logoH +
-        headerBottom +
-        ((titleFont * 1.18) + AppConst.Home.titleBottom) * 2 +
-        16
-        
+        // Directly subtract each fixed block so the bottom spacer minimum
+        // (safeAreaInsets.bottom + 8) is always reserved and never causes overflow.
+        let isLargeIPad = screen.height > 900
+        let headerBlock = geo.safeAreaInsets.top + 8 + logoH + headerBottom
+        let titleBlock = (titleFont * 1.35 + AppConst.Home.titleBottom) * 2
+        let footerBlock = geo.safeAreaInsets.bottom + (isLargeIPad ? 8 : 48)
+        let sectionGap = max(4, (screen.height * 0.008)).rounded()
+
         let available = max(
-            280,
-            screen.height - fixedHeight
+            200,
+            screen.height - headerBlock - titleBlock - footerBlock - sectionGap
         )
         
         let maxPlaceW = screen.width * AppConst.Home.placeWidthRatio
@@ -283,7 +288,7 @@ private struct HomeSize {
         )
         
         let emotionBottom = emotion * AppConst.Home.emotionBottomRatio
-        let emotionTotalH = emotion + emotionBottom
+        let emotionTotalH = min(remaining, emotion + emotionBottom)
         
         return HomeSize(
             sidePad: sidePad,
@@ -296,6 +301,8 @@ private struct HomeSize {
             placeH: placeH,
             placeBottom: placeBottom,
             placeTotalH: placeTotalH,
+            sectionGap: sectionGap,
+            isLargeIPad: isLargeIPad,
             emotion: emotion,
             emotionBottom: emotionBottom,
             emotionTotalH: emotionTotalH
