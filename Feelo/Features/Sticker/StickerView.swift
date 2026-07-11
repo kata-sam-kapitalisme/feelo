@@ -4,6 +4,12 @@ struct StickerView: View {
     @Environment(AppNav.self) private var nav
     @State private var vm = StickerVM()
 
+    private var windowSafeAreaBottom: CGFloat {
+        UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .first?.keyWindow?.safeAreaInsets.bottom ?? 0
+    }
+
     var body: some View {
         GeometryReader { geo in
             let scale = min(
@@ -45,7 +51,7 @@ struct StickerView: View {
                 )
                 .position(
                     x: geo.size.width / 2,
-                    y: geo.size.height / 2
+                    y: geo.size.height / 2 - windowSafeAreaBottom / 2
                 )
 
                 backButton {

@@ -3,6 +3,12 @@ import SwiftUI
 struct PumpOutro: View {
     @Environment(AppNav.self) private var nav
     @State private var outroOverlay = false
+
+    private var windowSafeAreaBottom: CGFloat {
+        UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .first?.keyWindow?.safeAreaInsets.bottom ?? 0
+    }
     
     private let text1 = "Kamu berhasil mengisi bolanya lagi!"
     private let text2 = "Sekarang, kamu bisa bermain bersama lagi."
@@ -71,7 +77,7 @@ struct PumpOutro: View {
                             }
                         }
                         .padding(.trailing, 32)
-                        .padding(.bottom, 32)
+                        .padding(.bottom, max(32, windowSafeAreaBottom + 45))
                     }
                 }
             }

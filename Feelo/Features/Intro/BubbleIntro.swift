@@ -6,6 +6,12 @@ struct BubbleIntro: View {
     @State private var vm = BubbleIntroVM()
     @State private var tapInstruction = true
 
+    private var windowSafeAreaBottom: CGFloat {
+        UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .first?.keyWindow?.safeAreaInsets.bottom ?? 0
+    }
+
     var body: some View {
         GeometryReader { geo in
             let scale = min(1.0, min(geo.size.width / AppConst.Ref.w, geo.size.height / AppConst.Ref.h))
@@ -55,7 +61,7 @@ struct BubbleIntro: View {
                             }
                         }
                         .padding(.trailing, 32)
-                        .padding(.bottom, 32)
+                        .padding(.bottom, max(32, windowSafeAreaBottom + 45))
                     }
                 }
         }

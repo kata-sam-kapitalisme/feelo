@@ -3,6 +3,12 @@ import SwiftUI
 struct BubbleOutro: View {
     @Environment(AppNav.self) private var nav
     @State private var outroOverlay = false
+
+    private var windowSafeAreaBottom: CGFloat {
+        UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .first?.keyWindow?.safeAreaInsets.bottom ?? 0
+    }
     
     private let text1 = "Kamu berhasil memecahkan semua gelembung!"
     private let text2 = "Kamu sangat bersemangat dan melompat dengan bahagia."
@@ -71,7 +77,7 @@ struct BubbleOutro: View {
                             }
                         }
                         .padding(.trailing, 32)
-                        .padding(.bottom, 32)
+                        .padding(.bottom, max(32, windowSafeAreaBottom + 45))
                     }
                 }
             }

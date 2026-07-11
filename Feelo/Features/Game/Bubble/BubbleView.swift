@@ -46,19 +46,21 @@ struct BubbleView: View {
                     Spacer()
                 }
 
-                VStack {
-                    HStack {
+                if !showPreparation {
+                    VStack {
+                        HStack {
+                            Spacer()
+
+                            HintCard(
+                                gif: AssetName.Gif.bubTut,
+                                show: showTutorial
+                            )
+                            .padding(.top, 90)
+                            .padding(.trailing, 16)
+                        }
+
                         Spacer()
-
-                        HintCard(
-                            gif: AssetName.Gif.bubTut,
-                            show: showTutorial
-                        )
-                        .padding(.top, 90)
-                        .padding(.trailing, 16)
                     }
-
-                    Spacer()
                 }
 
                 if showPreparation {
