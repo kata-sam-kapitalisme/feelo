@@ -31,7 +31,11 @@ struct HomeView: View {
                     placeList(size)
                         .frame(height: size.placeTotalH)
                     
-                    Color.clear.frame(height: size.sectionGap)
+                    if size.isLargeIPad {
+                        Spacer(minLength: size.sectionGap)
+                    } else {
+                        Color.clear.frame(height: size.sectionGap)
+                    }
 
                     sectionTitle(
                         "Macam-macam emosi",
@@ -208,6 +212,7 @@ private struct HomeSize {
     let placeBottom: CGFloat
     let placeTotalH: CGFloat
     let sectionGap: CGFloat
+    let isLargeIPad: Bool
 
     let emotion: CGFloat
     let emotionBottom: CGFloat
@@ -245,9 +250,10 @@ private struct HomeSize {
         
         // Directly subtract each fixed block so the bottom spacer minimum
         // (safeAreaInsets.bottom + 8) is always reserved and never causes overflow.
+        let isLargeIPad = screen.height > 900
         let headerBlock = geo.safeAreaInsets.top + 8 + logoH + headerBottom
         let titleBlock = (titleFont * 1.35 + AppConst.Home.titleBottom) * 2
-        let footerBlock = geo.safeAreaInsets.bottom + 48
+        let footerBlock = geo.safeAreaInsets.bottom + (isLargeIPad ? 8 : 48)
         let sectionGap = max(4, (screen.height * 0.008)).rounded()
 
         let available = max(
@@ -296,6 +302,7 @@ private struct HomeSize {
             placeBottom: placeBottom,
             placeTotalH: placeTotalH,
             sectionGap: sectionGap,
+            isLargeIPad: isLargeIPad,
             emotion: emotion,
             emotionBottom: emotionBottom,
             emotionTotalH: emotionTotalH
