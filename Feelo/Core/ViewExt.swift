@@ -1,6 +1,16 @@
 import SwiftUI
 
 extension View {
+    var safeAreaBottom: CGFloat {
+        UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .first?.keyWindow?.safeAreaInsets.bottom ?? 0
+    }
+
+    func bottomSafePadding(base: CGFloat = 32, offset: CGFloat = 45) -> some View {
+        padding(.bottom, max(base, safeAreaBottom + offset))
+    }
+
     func cardShadow() -> some View {
         shadow(
             color: .black.opacity(0.08),

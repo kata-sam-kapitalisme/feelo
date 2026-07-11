@@ -1,12 +1,6 @@
 import SwiftUI
 
 struct TapHint: View {
-    private var windowSafeAreaBottom: CGFloat {
-        UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .first?.keyWindow?.safeAreaInsets.bottom ?? 0
-    }
-
     var body: some View {
         ZStack {
             Color.black
@@ -27,7 +21,7 @@ struct TapHint: View {
                         .foregroundStyle(.white)
                 }
                 .padding(.trailing, 32)
-                .padding(.bottom, max(32, windowSafeAreaBottom + 45))
+                .bottomSafePadding()
             }
         }
         .ignoresSafeArea()
