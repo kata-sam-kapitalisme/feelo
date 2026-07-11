@@ -62,21 +62,23 @@ struct PumpView: View {
                     .zIndex(100)
                 }
 
-                VStack {
-                    HStack {
+                if !showPreparation {
+                    VStack {
+                        HStack {
+                            Spacer()
+
+                            HintCard(
+                                gif: AssetName.Gif.pumpTut,
+                                show: showTutorial
+                            )
+                            .padding(.top, 90)
+                            .padding(.trailing, 16)
+                        }
+
                         Spacer()
-
-                        HintCard(
-                            gif: AssetName.Gif.pumpTut,
-                            show: showTutorial
-                        )
-                        .padding(.top, 90)
-                        .padding(.trailing, 16)
                     }
-
-                    Spacer()
+                    .zIndex(30)
                 }
-                .zIndex(30)
 
                 if showPreparation {
                     PreparationOverlay {

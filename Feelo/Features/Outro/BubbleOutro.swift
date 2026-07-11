@@ -3,7 +3,7 @@ import SwiftUI
 struct BubbleOutro: View {
     @Environment(AppNav.self) private var nav
     @State private var outroOverlay = false
-    
+
     private let text1 = "Kamu berhasil memecahkan semua gelembung!"
     private let text2 = "Kamu sangat bersemangat dan melompat dengan bahagia."
     
@@ -71,7 +71,7 @@ struct BubbleOutro: View {
                             }
                         }
                         .padding(.trailing, 50)
-                        .padding(.bottom, 52)
+                        .bottomSafePadding(base: 52)
                     }
                 }
             }

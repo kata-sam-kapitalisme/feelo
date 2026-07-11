@@ -36,19 +36,19 @@ struct PumpIntro: View {
                 TapHint()
             }
             
-            if vm.step == .three{
+            if vm.step == .three {
                 VStack {
                     Spacer()
-                    
+
                     HStack {
                         Spacer()
-                        
+
                         NextButton {
                             _ = vm.next()
                         }
                     }
                     .padding(.trailing, 32)
-                    .padding(.bottom, 32)
+                    .bottomSafePadding()
                 }
             }
         }
