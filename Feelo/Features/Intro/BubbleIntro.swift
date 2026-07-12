@@ -124,6 +124,7 @@ struct BubbleIntro: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: cardWith)
+                    .padding(.bottom, isLargeIPad ? 8 : 24)
                 //                    .position(x:screenSize.width/2, y: screenSize.height-cardWith * 0.5)
             }.frame(width: screenSize.width, height: screenSize.height, alignment: .bottom)
                 .contentShape(Rectangle())

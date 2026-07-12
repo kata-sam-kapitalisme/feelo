@@ -5,7 +5,7 @@ extension View {
     /// Use this wherever layout needs to differ between the two iPad sizes.
     var isLargeIPad: Bool {
         let s = UIScreen.main.bounds.size
-        return max(s.width, s.height) > 1200
+        return max(s.width, s.height) > 1300
     }
 
     var safeAreaBottom: CGFloat {
@@ -16,8 +16,9 @@ extension View {
 
     /// Adds bottom padding that accounts for the home-indicator bar on 11" iPads.
     /// On 13" iPads the bar is absent so `base` is used directly.
-    func bottomSafePadding(base: CGFloat = 32, offset: CGFloat = 45) -> some View {
-        padding(.bottom, isLargeIPad ? base : max(base, safeAreaBottom + offset))
+    func bottomSafePadding(base: CGFloat = 32, offset: CGFloat = 60) -> some View {
+        let effectiveSafeBottom: CGFloat = isLargeIPad ? 0 : max(safeAreaBottom, 20)
+        return padding(.bottom, isLargeIPad ? base : max(base, effectiveSafeBottom + offset))
     }
 
     func cardShadow() -> some View {

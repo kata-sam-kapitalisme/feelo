@@ -117,6 +117,7 @@ struct PumpIntro: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: cardWidth)
+                    .padding(.bottom, isLargeIPad ? 8 : 24)
             }
             .frame(width: screenSize.width, height: screenSize.height, alignment: .bottom)
             .contentShape(Rectangle())
