@@ -1,9 +1,22 @@
+import AVFoundation
+import Combine
 import SwiftUI
 
 struct PreparationOverlay: View {
+    let cameraFrames: PassthroughSubject<CMSampleBuffer, Never>
     let onFinish: () -> Void
 
     @State private var countdown = 5
+    @State private var bodySvc = BodySvc()
+    @State private var screenSize: CGSize = .zero
+    @State private var guideRect: CGRect = .zero
+
+    var statusText: String {
+        guard screenSize != .zero else { return "Sesuaikan posisimu..." }
+        if bodySvc.isBodyInRect(guideRect, screenSize: screenSize) { return "Posisi pas! Siap..." }
+        if bodySvc.isDetected { return "Mundur sedikit!" }
+        return "Sesuaikan posisimu..."
+    }
 
     var body: some View {
         GeometryReader { geo in
@@ -65,7 +78,7 @@ struct PreparationOverlay: View {
                     Spacer()
                     HStack {
                         Spacer()
-                        Text("Sesuaikan posisimu...")
+                        Text(statusText)
                             .font(AppFont.medium(36 * scale))
                             .foregroundStyle(.white)
                             .multilineTextAlignment(.trailing)
@@ -75,17 +88,48 @@ struct PreparationOverlay: View {
                     .bottomSafePadding()
                 }
             }
+            .onAppear {
+                updateGuideRect(geo.size)
+            }
+            .onChange(of: geo.size) { _, newSize in
+                updateGuideRect(newSize)
+            }
         }
         .ignoresSafeArea()
         .task {
+            bodySvc.bind(cameraFrames)
+
+            while screenSize == .zero {
+                try? await Task.sleep(nanoseconds: 50_000_000)
+            }
+
             try? await Task.sleep(nanoseconds: 4_800_000_000)
-            
-            for i in stride(from: 5, through: 1, by: -1) {
-                countdown = i
+
+            var current = 5
+            while current >= 1 {
+                while !bodySvc.isBodyInRect(guideRect, screenSize: screenSize) {
+                    try? await Task.sleep(nanoseconds: 100_000_000)
+                }
+                countdown = current
                 SoundSvc.shared.click()
                 try? await Task.sleep(nanoseconds: 1_000_000_000)
+                current -= 1
             }
             onFinish()
         }
+    }
+
+    private func updateGuideRect(_ size: CGSize) {
+        let scale = max(0.6, min(size.width / AppConst.Ref.w, size.height / AppConst.Ref.h))
+        let padding = max(20.0, 32.0 * scale)
+        let imgH = size.height * 0.65
+        let imgW = imgH * (544.0 / 989.0)
+        guideRect = CGRect(
+            x: (size.width - imgW) / 2,
+            y: size.height - imgH - padding,
+            width: imgW,
+            height: imgH
+        )
+        screenSize = size
     }
 }

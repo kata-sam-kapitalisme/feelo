@@ -64,7 +64,7 @@ struct BubbleView: View {
                 }
 
                 if showPreparation {
-                    PreparationOverlay {
+                    PreparationOverlay(cameraFrames: camera.frames) {
                         withAnimation(.easeInOut(duration: 0.35)) {
                             showPreparation = false
                         }
