@@ -63,17 +63,31 @@ struct PumpView: View {
                 }
 
                 if !showPreparation {
-                    VStack {
+                    VStack(spacing: 0) {
+                        HStack {
+                            GameCounterHUD(
+                                iconName: AssetName.Img.pumpDown,
+                                current: min(engine.count, AppConst.Game.pumpGoal),
+                                goal: AppConst.Game.pumpGoal
+                            )
+                            Spacer()
+                        }
+                        .padding(.horizontal, 18)
+                        .padding(.top, 18)
+
+                        Spacer()
+                    }
+                    .zIndex(30)
+                }
+
+                if !showPreparation {
+                    VStack(spacing: 0) {
                         HStack {
                             Spacer()
-
-                            HintCard(
-                                gif: AssetName.Gif.pumpTut,
-                                show: showTutorial
-                            )
-                            .padding(.top, 90)
-                            .padding(.trailing, 16)
+                            HintCard(gif: AssetName.Gif.pumpTut, show: showTutorial)
+                                .padding(.trailing, 16)
                         }
+                        .padding(.top, 90)
 
                         Spacer()
                     }
