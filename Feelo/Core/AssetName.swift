@@ -41,6 +41,7 @@ enum AssetName {
 
         static let stBubble = "stBubble"
         static let stBasket = "stBasket"
+        static let activityGuide = "activity-guide"
     }
 
     enum Gif {

@@ -15,64 +15,68 @@ struct PreparationOverlay: View {
                     .ignoresSafeArea()
                     .contentShape(Rectangle())
 
-                VStack(spacing: 24 * scale) {
-                    Image(AssetName.Img.foot)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 124 * scale)
+                // VStack(spacing: 24 * scale) {
+                //     VStack(spacing: 12 * scale) {
+                //         Text("Persiapan!")
+                //             .font(AppFont.semi(64 * scale))
+                //             .foregroundStyle(.black)
+                //             .multilineTextAlignment(.center)
+                //             .minimumScaleFactor(0.6)
 
-                    VStack(spacing: 12 * scale) {
-                        Text("Persiapan!")
-                            .font(AppFont.semi(64 * scale))
-                            .foregroundStyle(.black)
-                            .multilineTextAlignment(.center)
-                            .minimumScaleFactor(0.6)
-
-                        Text("Mundur 3 langkah ke belakang, yuk!")
-                            .font(AppFont.semi(36 * scale))
-                            .foregroundStyle(.black)
-                            .multilineTextAlignment(.center)
-                            .minimumScaleFactor(0.6)
-                    }
-                }
-                .padding(.horizontal, 64 * scale)
-                .padding(.vertical, 48 * scale)
-                .frame(maxWidth: cardW)
-                .background {
-                    RoundedRectangle(
-                        cornerRadius: 48 * scale,
-                        style: .continuous
-                    )
-                    .fill(Color(red: 245 / 255, green: 245 / 255, blue: 245 / 255))
-                    .shadow(
-                        color: .black.opacity(0.20),
-                        radius: 24 * scale,
-                        x: 0,
-                        y: 12 * scale
-                    )
-                }
-                .position(
-                    x: geo.size.width / 2,
-                    y: geo.size.height / 2
-                )
+                //         Text("Mundur 3 langkah ke belakang, yuk!")
+                //             .font(AppFont.semi(36 * scale))
+                //             .foregroundStyle(.black)
+                //             .multilineTextAlignment(.center)
+                //             .minimumScaleFactor(0.6)
+                //     }
+                // }
+                // .padding(.horizontal, 64 * scale)
+                // .padding(.vertical, 48 * scale)
+                // .frame(maxWidth: cardW)
+                // .background {
+                //     RoundedRectangle(
+                //         cornerRadius: 48 * scale,
+                //         style: .continuous
+                //     )
+                //     .fill(Color(red: 245 / 255, green: 245 / 255, blue: 245 / 255))
+                //     .shadow(
+                //         color: .black.opacity(0.20),
+                //         radius: 24 * scale,
+                //         x: 0,
+                //         y: 12 * scale
+                //     )
+                // }
+                // .position(
+                //     x: geo.size.width / 2,
+                //     y: geo.size.height / 2
+                // )
 
                 VStack {
                     Spacer()
 
+                    Image(AssetName.Img.activityGuide)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: geo.size.height * 0.65)
+                        .padding(.bottom, max(20, 32 * scale))
+                }
+
+                VStack {
+                    Spacer()
                     HStack {
                         Spacer()
-
-                        Text("Mulai dalam \(countdown)\(String(repeating: " .", count: countdown))")
+                        Text("Sesuaikan posisimu...")
                             .font(AppFont.medium(36 * scale))
                             .foregroundStyle(.white)
-                            .multilineTextAlignment(.center)
+                            .multilineTextAlignment(.trailing)
                             .minimumScaleFactor(0.7)
-                            .padding(.trailing, max(24, 40 * scale))
-                            .padding(.bottom, max(20, 36 * scale))
                     }
+                    .padding(.trailing, max(24, 40 * scale))
+                    .bottomSafePadding()
                 }
             }
         }
+        .ignoresSafeArea()
         .task {
             try? await Task.sleep(nanoseconds: 4_800_000_000)
             
