@@ -253,7 +253,7 @@ private struct HomeSize {
         let isLargeIPad = screen.height > 900
         let headerBlock = geo.safeAreaInsets.top + 8 + logoH + headerBottom
         let titleBlock = (titleFont * 1.35 + AppConst.Home.titleBottom) * 2
-        let footerBlock = geo.safeAreaInsets.bottom + (isLargeIPad ? 8 : 48)
+        let footerBlock = geo.safeAreaInsets.bottom + 8
         let sectionGap = max(4, (screen.height * 0.008)).rounded()
 
         let available = max(
@@ -263,32 +263,35 @@ private struct HomeSize {
         
         let maxPlaceW = screen.width * AppConst.Home.placeWidthRatio
         let maxPlaceH = maxPlaceW * AppConst.Home.placeAspect
-        
-        let placeSpace = available * AppConst.Home.placeSpaceRatio
-        let placeH = min(
-            maxPlaceH,
-            placeSpace / (1 + AppConst.Home.placeBottomRatio)
-        )
-        
-        let placeW = placeH / AppConst.Home.placeAspect
-        let placeBottom = placeH * AppConst.Home.placeBottomRatio
-        let placeTotalH = placeH + placeBottom
-        
-        let remaining = max(
-            120,
-            available - placeTotalH
-        )
-        
+
+        // Emotion: pin to previous size on small iPad by deriving from the
+        // conservative available (with old footerBlock = safeAreaInsets.bottom + 48).
+        // Large iPad is unaffected.
+        let availableForEmotion = isLargeIPad
+            ? available
+            : max(200, screen.height - headerBlock - titleBlock - (geo.safeAreaInsets.bottom + 48) - sectionGap)
+        let emotionSpace = max(120, availableForEmotion * (1 - AppConst.Home.placeSpaceRatio))
         let emotion = min(
             AppConst.Home.maxEmotion,
             max(
                 AppConst.Home.minEmotion,
-                remaining / (1 + AppConst.Home.emotionBottomRatio)
+                emotionSpace / (1 + AppConst.Home.emotionBottomRatio)
             )
         )
-        
         let emotionBottom = emotion * AppConst.Home.emotionBottomRatio
-        let emotionTotalH = min(remaining, emotion + emotionBottom)
+        let emotionTotalH = emotion + emotionBottom
+
+        // Place: small iPad takes all remaining available so it fills the gap;
+        // large iPad keeps the original ratio-based sizing.
+        // On small iPad use a tighter bottom-padding ratio so more of the
+        // allocated height goes to the visible card (aspect ratio stays intact).
+        let placeBottomRatio = isLargeIPad ? AppConst.Home.placeBottomRatio : 0.10
+        let placeH = isLargeIPad
+            ? min(maxPlaceH, available * AppConst.Home.placeSpaceRatio / (1 + AppConst.Home.placeBottomRatio))
+            : min(maxPlaceH, (available - emotionTotalH) / (1 + placeBottomRatio))
+        let placeW = placeH / AppConst.Home.placeAspect
+        let placeBottom = placeH * placeBottomRatio
+        let placeTotalH = placeH + placeBottom
         
         return HomeSize(
             sidePad: sidePad,
